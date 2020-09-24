@@ -57,7 +57,7 @@ cap = cv2.VideoCapture(1)
  
 while True:
     ret,frame = cap.read()                                          #grabing the current frame
-    gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)            #converting the frame to black/white not necessary right now
+    #gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)            #converting the frame to black/white not necessary right now
     blurred = cv2.GaussianBlur(frame, (11, 11), 0)                  #blurring the image helps with noise reduction
     hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)                    #converting the 
     mask = cv2.inRange(hsv, lower_white, upper_white)               #declaring mask with the lower and upper boundaries set for the color
