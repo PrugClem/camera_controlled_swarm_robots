@@ -9,6 +9,7 @@ int main()
     SvVis3_message_t msg;
     if(!cortex.open("localhost", 10001))
     {
+        std::cout << "unable to connect to conversion server" << std::endl;
         exit(EXIT_FAILURE);
     }
     cortex.send_string("helo htaftgehltucdftgisfadtfute");

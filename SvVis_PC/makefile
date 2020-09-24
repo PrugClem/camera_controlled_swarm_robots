@@ -1,6 +1,6 @@
 IDIR =.
 CC=g++
-CFLAGS=-I$(IDIR)
+CFLAGS=-I$(IDIR) -Wall -Wextra
 
 ODIR=obj
 LDIR =.
@@ -20,21 +20,27 @@ OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 $(ODIR)/%.o: % $(DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS)
 
+$(LIB_OUT): $(OBJ)
+	ar -r -s $(LIB_OUT) $(OBJ)
+
 full:
 	make lib
 	make test
 
-test: $(CPPSOCK) $(OBJ)
+test: $(OBJ)
 	$(CC) -o SvVis_PC_test \
 		SvVis_PC_test.cpp \
 		$(LIB_OUT) $(CPPSOCK)
+	$(CC) -o SvVis_PC_test_server \
+		SvVis_PC_test_server.cpp \
+		$(LIB_OUT) $(CPPSOCK)
 
 lib: $(OBJ)
-	ar -r -s $(LIB_OUT) $(OBJ)
+	make $(LIB_OUT)
 
 clear:
 	rm -f $(OBJ)
-	rm -f SvVis_PC_test SvVis_PC_test.exe
+	rm -f SvVis_PC_test SvVis_PC_test.exe SvVis_PC_test_server SvVis_PC_test_server.exe
 
 remake:
 	make clear

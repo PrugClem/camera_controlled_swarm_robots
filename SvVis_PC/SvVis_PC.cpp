@@ -102,6 +102,7 @@ void SvVis::recv_msg(SvVis3_message_t &msgbuf)
             if(msgbuf.len < SvVIS3_DATA_MAX_LEN-1) {msgbuf.data.raw[msgbuf.len++] = recvbuf;} // character can be used
             else                                   {msgbuf.data.raw[SvVIS3_DATA_MAX_LEN-1] = 0;} // no memory left, terminating character has to be put here
         }
+        msgbuf.data.raw[msgbuf.len] = 0; // set ending character to 0
     }
 }
 

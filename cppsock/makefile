@@ -1,6 +1,6 @@
 IDIR =.
 CC=gcc
-CFLAGS=-I$(IDIR)
+CFLAGS=-I$(IDIR) -Wall -Wextra
 
 ODIR=obj
 LDIR =.
@@ -35,6 +35,7 @@ lib: $(OBJ)
 
 clear:
 	rm -f $(OBJ)
+	rm -f $(LIB_OUT)
 	rm -f cppsock_test cppsock_test.exe
 
 remake:
