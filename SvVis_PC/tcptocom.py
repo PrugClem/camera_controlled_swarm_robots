@@ -8,7 +8,7 @@ import os
 #defines
 IP = '0.0.0.0';
 PORT = 10001;
-COMPORT = '/dev/ttyS3';
+COMPORT = '/dev/ttyUSB0';
 BAUDRATE = 115200;
 
 #running variable
@@ -21,7 +21,7 @@ def initialisierung():
         print("========== Opening Physical Serial Port failed ==========");
         print(type(exception));
         print(exception.args[0]);
-        print("Avaliable Ports:");
+        print("\nAvaliable Ports:");
         print(list(list_ports.comports()));
         exit(-1);
         pass
@@ -49,20 +49,20 @@ def tcptoserial(conn,serielle):
 
 def serialtotcp(conn,serielle):
     global running;
-    global v_com;
+    #global v_com;
     while running:
         data = serielle.readline(1024);
         if data:
             print("Data from serial to tcp = ",data);
             conn.send(data);
-            v_com.write(data);
+            #v_com.write(data);
 
 def main():
     global running;
-    master, slave = pty.openpty();
-    v_com_name = os.ttyname(slave);
-    v_com = serial.Serial(v_com_name);
-    print("Virtual com port opened:",v_com.name);
+    #master, slave = pty.openpty();
+    #v_com_name = os.ttyname(slave);
+    #v_com = serial.Serial(v_com_name);
+    #print("Virtual com port opened:",v_com.name);
 
     serielle,conn = initialisierung();
 

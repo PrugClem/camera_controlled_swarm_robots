@@ -12,7 +12,7 @@ int main()
         std::cout << "unable to connect to conversion server" << std::endl;
         exit(EXIT_FAILURE);
     }
-    cortex.send_string("helo htaftgehltucdftgisfadtfute");
+    cortex.send_string("abcdefghijklmnopqrstuvwxyz0123456789");
     cortex.recv_msg(msg); // message received
     std::cout << msg.data.raw << std::endl;
     cortex.recv_msg(msg); // length i16
