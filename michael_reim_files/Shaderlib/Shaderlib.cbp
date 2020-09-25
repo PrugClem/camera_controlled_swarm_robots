@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="Shaderlib" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/Debug/_glShader_debug" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="" />
+				<Option object_output="obj/Debug/" />
+				<Option type="2" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Compiler>
+					<Add option="-Wall" />
+					<Add option="-g" />
+				</Compiler>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/_glShader" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="" />
+				<Option object_output="obj/Release/" />
+				<Option type="2" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Compiler>
+					<Add option="-Wall" />
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-O3" />
+			<Add option="-std=c++1z" />
+			<Add directory="E:/Privat/Programmieren/Klassen/glew-2.1.0/include" />
+			<Add directory="C:/CodeBlocks/GLFW-2.7/include" />
+		</Compiler>
+		<Linker>
+			<Add library="E:/Privat/Programmieren/Klassen/glew-2.1.0/lib/Release/Win32/glew32.lib" />
+			<Add library="E:/Privat/Programmieren/Klassen/glew-2.1.0/lib/Release/Win32/glew32s.lib" />
+			<Add library="C:/CodeBlocks/GLFW-2.7/lib/libglfw.a" />
+			<Add library="glfw" />
+			<Add library="opengl32" />
+			<Add library="glu32" />
+			<Add library="gdi32" />
+		</Linker>
+		<Unit filename="Shader.h" />
+		<Unit filename="Shader_src/shader_load_src.cpp" />
+		<Unit filename="Shader_src/shader_other_src.cpp" />
+		<Unit filename="Shader_src/shader_uniform_src.cpp" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+			<fortran_project />
+			<lib_finder disable_auto="1" />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

@@ -1,0 +1,42 @@
+# depslib dependency file v1.0
+1599315661 source:e:\privat\programmieren\c++\eventhandler\event_src\event_handler_src.cpp
+	"../Event.h"
+	<iostream>
+
+1599316006 e:\privat\programmieren\c++\eventhandler\event.h
+	<map>
+	<vector>
+	<list>
+	<chrono>
+	<atomic>
+	<thread>
+	<mingw.thread.h>
+
+1568395359 e:\privat\programmieren\klassen\mingw-std-threads-master\mingw.thread.h
+	<thread>
+	<cstddef>
+	<cerrno>
+	<exception>
+	<system_error>
+	<functional>
+	<tuple>
+	<chrono>
+	<memory>
+	<iosfwd>
+	<utility>
+	"mingw.invoke.h"
+	<synchapi.h>
+	<handleapi.h>
+	<sysinfoapi.h>
+	<processthreadsapi.h>
+	<process.h>
+	<cstdio>
+
+1568395359 e:\privat\programmieren\klassen\mingw-std-threads-master\mingw.invoke.h
+	<type_traits>
+	<utility>
+	<functional>
+
+1600801642 source:e:\privat\programmieren\c++\eventhandler\event_src\listener_src.cpp
+	"../Event.h"
+
