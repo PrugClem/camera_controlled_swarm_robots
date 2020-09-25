@@ -1,4 +1,5 @@
 import serial
+import serial.tools.list_ports as list_ports
 import socket
 import threading
 import pty
@@ -20,6 +21,8 @@ def initialisierung():
         print("========== Opening Physical Serial Port failed ==========");
         print(type(exception));
         print(exception.args[0]);
+        print("Avaliable Ports:");
+        print(list(list_ports.comports()));
         exit(-1);
         pass
     print("Opening COM Port");
