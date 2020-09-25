@@ -36,6 +36,7 @@ void main_thread_func(void *arg)
     SvVis3_message_t msg;
     led_blink_handle = osThreadNew(dil_led_blink, NULL, NULL);
     SvVis3_send_string(tar, "Hello", osWaitForever);
+    SvVis3_send_string(tar, "abcdefghijklmnopqrstuvwxyz0123456789", osWaitForever);
     for(;;)
     {
         SvVis3_recv_message(tar, &msg, osWaitForever);

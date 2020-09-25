@@ -101,9 +101,11 @@ osStatus_t SvVis3_send_message(SvVis3_t *tar, SvVis3_message_t *message, uint32_
 osStatus_t SvVis3_send_string(SvVis3_t *tar, const char *str, uint32_t timeout)
 {
     size_t len = strlen(str)+1;
-    //if(len > SvVIS3_DATA_MAX_LEN) {len = SvVIS3_DATA_MAX_LEN;}
+	bool too_long = (len >= SvVIS3_DATA_MAX_LEN);
+    if(too_long) {len = SvVIS3_DATA_MAX_LEN;}
     SvVis3_message_t message = {.channel = SvVIS3_STRING_CHANNEL, .len = len};
     memcpy(message.data.raw, str, len);
+	if(too_long) {message.data.raw[SvVIS3_DATA_MAX_LEN-1] = 0; USART_send_byte(USART1, '#');} else {USART_send_byte(USART1, '!');}
     return SvVis3_send_message(tar, &message, timeout);
 }
 osStatus_t SvVis3_send_I16(SvVis3_t *tar, SvVis3_channel_t channel, int16_t data, uint32_t timeout)
