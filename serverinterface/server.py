@@ -17,28 +17,38 @@ def initialise():
         print(str(e))
         exit()
 
-def allowconnections(number):
+def allowconnections():
     print('Warten auf Verbindungen')
-    ServerSocket.listen(number)
+    ServerSocket.listen()
 
-def getconnfromIP(IP):
-    print(IP)
+
+"""
+rawdata:
+    b'IP from destination "," message\r\n'
+"""
+def transmitter(rawdata):
+    destination,message  = rawdata[2:-5].split(",")
+    for client in clients:
+        if destination in str(client):
+            client.send(str(message))
 
 def threaded_client(connection):
     connection.send(str.encode('Verbunden'))
     while True:
         data = connection.recv(1024)
-        getconnfromIP(str(data)[2:-5])
+        if not data:
+            break
+        transmitter(str(data))
     connection.close()
 
 
 def main():
     ThreadCount = 0
     initialise()
-    allowconnections(1)
+    allowconnections()
     while True:
         Client, address = ServerSocket.accept()
-        clients.append((Client,address))
+        clients.append(Client)
         print("Different Clients: ", clients)
         print('Verbunden mit: ' + address[0] + ':' + str(address[1]))
         start_new_thread(threaded_client, (Client, ))
