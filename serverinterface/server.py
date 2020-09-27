@@ -10,6 +10,10 @@ host = '0.0.0.0'
 port = 10000
 clients = []
 
+"""
+Binding the address and port
+If an errors occours, it will be displayed and the program exits
+"""
 def initialise():
     try:
         ServerSocket.bind((host, port))
@@ -17,12 +21,15 @@ def initialise():
         print(str(e))
         exit()
 
+"""
+Allows all connections
+"""
 def allowconnections():
     print('Warten auf Verbindungen'+"\r\n")
     ServerSocket.listen()
 
-
 """
+Transforms rawdata into an client address and message
 rawdata:
     b'IP from destination "," message\r\n'
 """
@@ -32,6 +39,9 @@ def transmitter(rawdata):
         if destination in str(client):
             client.send(bytes(message,"UTF-8"))
 
+"""
+Client Handler
+"""
 def threaded_client(connection):
     connection.send(str.encode('Verbunden\r\n'))
     while True:
@@ -40,6 +50,13 @@ def threaded_client(connection):
             break
         transmitter(str(data))
     connection.close()
+
+"""
+GUI
+"""
+def GUI():
+    pass
+
 
 
 def main():
