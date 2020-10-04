@@ -1,44 +1,51 @@
-import cv2 
+#import libs
+import cv2
 import numpy as np
-# Setup SimpleBlobDetector parameters.
-params = cv2.SimpleBlobDetector_Params()
-
-# Filter by Area.
-params.filterByArea = True
-params.minArea = 100
-params.maxArea =100000
-
-# Don't filter by Circularity
-params.filterByCircularity = False
-
-# Don't filter by Convexity
-params.filterByConvexity = False
-
-# Don't filter by Inertia
-params.filterByInertia = False
-
-
-# Create a detector with the parameters
-detector = cv2.SimpleBlobDetector_create(params)
-
-# Open the device at the ID 0
+import time
+ 
+#begin streaming
 cap = cv2.VideoCapture(0)
-#Check whether user selected camera is opened successfully.
-if not (cap.isOpened()):
-    print("Could not open video device")
-
-while(True):
-    # Capture frame-by-frame
-    ret, frame = cap.read()
-    grayImage = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    # Display the resulting frame
-    keypoints = detector.detect(frame)
-    im_with_keypoints = cv2.drawKeypoints(grayImage, keypoints, np.array([]), (0,0,255), cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
-    cv2.imshow('preview',frame)
-    cv2.imshow('points',im_with_keypoints)
-    #Waits for a user input to quit the application
-    if cv2.waitKey(1) & 0xFF == ord('q'):
+while True:
+    _, frame = cap.read()
+ 
+    #convert frame to monochrome and blur
+    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    blur = cv2.GaussianBlur(gray, (9,9), 0)
+ 
+    #use function to identify threshold intensities and locations
+    (minVal, maxVal, minLoc, maxLoc) = cv2.minMaxLoc(blur)
+ 
+    #threshold the blurred frame accordingly
+    hi, threshold = cv2.threshold(blur, maxVal-20, 230, cv2.THRESH_BINARY)
+    thr = threshold.copy()
+ 
+    #resize frame for ease
+    cv2.resize(thr, (300,300))
+    #find contours in thresholded frame
+    edged = cv2.Canny(threshold, 50, 150)
+    lightcontours, hierarchy = cv2.findContours(edged, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+    
+    #attempts finding the circle created by the torch illumination on the wall
+    circles = cv2.HoughCircles(threshold, cv2.cv.CV_HOUGH_GRADIENT, 1.0, 20,
+                            param1=10,
+                            param2= 15,
+                            minRadius=20,
+                            maxRadius=100,)
+    #check if the list of contours is greater than 0 and if any circles are detected
+    if len(lightcontours)&gt;0 and circles is not None:
+        #Find the Maxmimum Contour, this is assumed to be the light beam
+        maxcontour = max(lightcontours, key=cv2.contourArea)
+#avoids random spots of brightness by making sure the contour is reasonably sized
+        if cv2.contourArea(maxcontour) &gt; 2000:
+            (x, final_y), radius = cv2.minEnclosingCircle(maxcontour)
+            cv2.circle(frame, (int(x), int(final_y)), int(radius), (0, 255, 0), 4)
+            cv2.rectangle(frame, (int(x) - 5, int(final_y) - 5), (int(x) + 5, int(final_y) + 5), (0, 128, 255), -1)
+#display frames and exit
+    cv2.imshow('light', thr)
+    cv2.imshow('frame', frame)
+    cv2.waitKey(4)
+    key = cv2.waitKey(5) &amp; 0xFF
+    if key == ord('q'):
         break
-# When everything done, release the capture
 cap.release()
 cv2.destroyAllWindows()
