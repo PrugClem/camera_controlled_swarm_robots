@@ -47,8 +47,8 @@ typedef struct SvVis3_data_t
 void USART_send_bytes(USART_TypeDef*, void *start, size_t len);
 void USART_send_byte(USART_TypeDef*, uint8_t byte);
 
-void init_usart(USART_TypeDef *usartn);
-osStatus_t SvVis3_init(SvVis3_t* tar, USART_TypeDef* USARTx);
+void init_usart(USART_TypeDef *usartn, uint32_t baud);
+osStatus_t SvVis3_init(SvVis3_t* tar, USART_TypeDef* USARTx, uint32_t baud);
 osStatus_t SvVis3_send_message(SvVis3_t*, SvVis3_message_t *message, uint32_t timeout);
 osStatus_t SvVis3_send_string(SvVis3_t*, const char *str, uint32_t timeout);
 osStatus_t SvVis3_send_I16(SvVis3_t*, SvVis3_channel_t channel, int16_t data, uint32_t timeout);

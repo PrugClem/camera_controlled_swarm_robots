@@ -15,8 +15,8 @@
 #define SvVIS3_STRING_CHANNEL 10
 #define SvVIS3_FLOAT_CHANNEL_BASE 21
 
-#define USART_BAUD_9600 9600
-#define USART_BAUD_115200 115200
+#define USART_BAUD_9600 (9600 * 3) /* *3 becuase of some error I could not fix */
+#define USART_BAUD_115200 (115200 * 3) /* *3 becuase of some error I could not fix */
 #define USART_BAUD USART_BAUD_115200
 
 typedef uint8_t SvVis3_channel_t;

@@ -1,6 +1,6 @@
 #include "SvVis_cortex.h"
 
-void init_usart(USART_TypeDef *usartn)
+void init_usart(USART_TypeDef *usartn, uint32_t baud)
 {
     GPIO_InitTypeDef RX, TX;
     USART_InitTypeDef usart;
@@ -55,7 +55,7 @@ void init_usart(USART_TypeDef *usartn)
  
 	USART_ClockInit(usartn, &usart_clock);
 
-    usart.USART_BaudRate = USART_BAUD;
+    usart.USART_BaudRate = baud;
 	usart.USART_WordLength = USART_WordLength_8b;	 
 	usart.USART_StopBits = USART_StopBits_1;
 	usart.USART_Parity = USART_Parity_No;
@@ -77,9 +77,9 @@ void USART_send_byte(USART_TypeDef* port, uint8_t byte)
     USART_SendData(port, byte);
 }
 
-osStatus_t SvVis3_init(SvVis3_t *tar, USART_TypeDef *usart)
+osStatus_t SvVis3_init(SvVis3_t *tar, USART_TypeDef *usart, uint32_t baud)
 {
-    init_usart(usart);
+    init_usart(usart, baud);
     tar->port = usart;
 
     tar->queue_usart = osMessageQueueNew(SvVis3_USART_BACKLOG, sizeof(char), NULL);
