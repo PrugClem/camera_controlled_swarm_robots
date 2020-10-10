@@ -1,9 +1,9 @@
-import serial
-import serial.tools.list_ports as list_ports
-import socket
-import threading
-import pty
-import os
+import serial;
+import serial.tools.list_ports as list_ports;
+import socket;
+import threading;
+import os;
+import platform;
 
 #defines
 IP = '0.0.0.0';
@@ -16,13 +16,15 @@ running = True;
 
 def initialisierung():
     try:
+        if(platform.system() == 'Windows'):
+            COMPORT = 'COM4';
         serielle = serial.Serial(COMPORT, BAUDRATE, timeout = 0);
     except serial.SerialException as exception:
         print("========== Opening Physical Serial Port failed ==========");
         print(type(exception));
         print(exception.args[0]);
-        print("\nAvaliable Ports:");
-        print(list(list_ports.comports()));
+        #print("\nAvaliable Ports:");
+        #print(list(list_ports.comports()));
         exit(-1);
         pass
     print("Opening COM Port");
