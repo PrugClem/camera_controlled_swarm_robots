@@ -1,5 +1,5 @@
-.\objects\motor_driver.o: motor_driver.c
-.\objects\motor_driver.o: motor_driver.h
+.\objects\motor_driver.o: motor_driver.cpp
+.\objects\motor_driver.o: motor_driver.hpp
 .\objects\motor_driver.o: C:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\2.3.0\Device\StdPeriph_Driver\inc\stm32f10x_gpio.h
 .\objects\motor_driver.o: C:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\2.3.0\Device\Include\stm32f10x.h
 .\objects\motor_driver.o: .\RTE\_ARM_Minalsystem\RTE_Components.h
@@ -16,7 +16,7 @@
 .\objects\motor_driver.o: C:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\2.3.0\Device\StdPeriph_Driver\inc\misc.h
 .\objects\motor_driver.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
 .\objects\motor_driver.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
-.\objects\motor_driver.o: SvVis_cortex.h
+.\objects\motor_driver.o: SvVis_cortex.hpp
+.\objects\motor_driver.o: config.hpp
 .\objects\motor_driver.o: C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.1\CMSIS\RTOS2\Include\cmsis_os2.h
 .\objects\motor_driver.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
-.\objects\motor_driver.o: config.h

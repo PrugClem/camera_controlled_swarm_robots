@@ -2,7 +2,7 @@
 ".\objects\svvis_cortex.o"
 ".\objects\svvis_cortex_test.o"
 ".\objects\svvis_cortex_threads.o"
-"C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.7.0\CMSIS\RTOS2\RTX\Library\ARM\RTX_CM3.lib"
+"C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.1\CMSIS\RTOS2\RTX\Library\ARM\RTX_CM3.lib"
 ".\objects\rtx_lib.o"
 ".\objects\rtx_config.o"
 ".\objects\misc.o"

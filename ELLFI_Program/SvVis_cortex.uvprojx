@@ -381,24 +381,24 @@
           <GroupName>Source</GroupName>
           <Files>
             <File>
-              <FileName>SvVis_cortex.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\SvVis_cortex.c</FilePath>
+              <FileName>SvVis_cortex.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\SvVis_cortex.cpp</FilePath>
             </File>
             <File>
-              <FileName>SvVis_cortex_threads.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\SvVis_cortex_threads.c</FilePath>
+              <FileName>main.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\main.cpp</FilePath>
             </File>
             <File>
-              <FileName>main.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\main.c</FilePath>
+              <FileName>motor_driver.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\motor_driver.cpp</FilePath>
             </File>
             <File>
-              <FileName>motor_driver.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\motor_driver.c</FilePath>
+              <FileName>SvVis_cortex_threads.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\SvVis_cortex_threads.cpp</FilePath>
             </File>
           </Files>
         </Group>

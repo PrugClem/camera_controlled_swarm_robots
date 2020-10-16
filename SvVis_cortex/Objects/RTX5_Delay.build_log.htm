@@ -22,35 +22,25 @@ Dialog DLL:      TCM.DLL V1.32.0.0
  
 <h2>Project:</h2>
 D:\Daten\Clemens\Schule\_DA\dev\SvVis_cortex\SvVis_cortex.uvprojx
-Project File Date:  10/06/2020
+Project File Date:  10/16/2020
 
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 5 (build 528)', folder: 'C:\Keil_v5\ARM\ARMCC\Bin'
-Rebuild target 'ARM_Minalsystem'
-compiling RTX_Config.c...
-compiling rtx_lib.c...
-compiling SvVis_cortex_test.c...
-compiling SvVis_cortex.c...
-compiling misc.c...
-compiling SvVis_cortex_threads.c...
-assembling startup_stm32f10x_cl.s...
-compiling stm32f10x_gpio.c...
-compiling stm32f10x_rcc.c...
-compiling stm32f10x_usart.c...
-compiling system_stm32f10x.c...
+Build target 'ARM_Minalsystem'
+compiling SvVis_cortex_threads.cpp...
 linking...
-Program Size: Code=10412 RO-data=680 RW-data=5052 ZI-data=3172  
+Program Size: Code=12588 RO-data=588 RW-data=5560 ZI-data=3168  
 ".\Objects\RTX5_Delay.axf" - 0 Error(s), 0 Warning(s).
 
 <h2>Software Packages used:</h2>
 
 Package Vendor: ARM
-                http://www.keil.com/pack/ARM.CMSIS.5.7.0.pack
-                ARM.CMSIS.5.7.0
+                http://www.keil.com/pack/ARM.CMSIS.5.0.1.pack
+                ARM.CMSIS.5.0.1
                 CMSIS (Cortex Microcontroller Software Interface Standard)
-   * Component: Keil RTX5 Variant: Library Version: 5.5.2
-   * Component: CORE Version: 5.4.0
-   * Component: RTOS2 Version: 2.1.3
+   * Component: Keil RTX5 Variant: Library Version: 5.1.0
+   * Component: CORE Version: 5.0.1
+   * Component: RTOS2 Version: 2.1.0
 
 Package Vendor: Keil
                 http://www.keil.com/pack/Keil.STM32F1xx_DFP.2.3.0.pack
@@ -66,9 +56,9 @@ Package Vendor: Keil
   .\RTE\CMSIS
   .\RTE\Device\STM32F107RB
   .\RTE\_ARM_Minalsystem
-  C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.7.0\CMSIS\Core\Include
-  C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.7.0\CMSIS\RTOS2\Include
-  C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.7.0\CMSIS\RTOS2\RTX\Include
+  C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.1\CMSIS\Include
+  C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.1\CMSIS\RTOS2\Include
+  C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.1\CMSIS\RTOS2\RTX\Include
   C:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\2.3.0\Device\Include
   C:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\2.3.0\Device\StdPeriph_Driver\inc
 
@@ -87,37 +77,36 @@ Package Vendor: Keil
       Source file:   Device\StdPeriph_Driver\src\stm32f10x_gpio.c
 
    * Component: Keil::Device:StdPeriph Drivers:Framework:3.5.1
-      Source file:   Device\StdPeriph_Driver\templates\stm32f10x_conf.h
       Source file:   Device\StdPeriph_Driver\src\misc.c
-      Include file:  Device\StdPeriph_Driver\templates\stm32f10x_it.h
-      Include file:  Device\StdPeriph_Driver\inc\misc.h
       Source file:   Device\StdPeriph_Driver\templates\stm32f10x_it.c
+      Include file:  Device\StdPeriph_Driver\templates\stm32f10x_it.h
+      Source file:   Device\StdPeriph_Driver\templates\stm32f10x_conf.h
+      Include file:  Device\StdPeriph_Driver\inc\misc.h
 
    * Component: Keil::Device:Startup:1.0.0
-      Source file:   Device\Source\system_stm32f10x.c
       Source file:   Device\Source\ARM\STM32F1xx_OPT.s
-      Source file:   Device\Source\ARM\startup_stm32f10x_cl.s
       Include file:  RTE_Driver\Config\RTE_Device.h
+      Source file:   Device\Source\system_stm32f10x.c
+      Source file:   Device\Source\ARM\startup_stm32f10x_cl.s
 
-   * Component: ARM::CMSIS:RTOS2:Keil RTX5:Library:5.5.2
-      Include file:  CMSIS\RTOS2\RTX\Config\RTX_Config.h
-      Include file:  CMSIS\RTOS2\RTX\Include\rtx_os.h
-      Source file:   CMSIS\RTOS2\RTX\Template\MsgQueue.c
-      Source file:   CMSIS\RTOS2\RTX\Config\RTX_Config.c
-      Source file:   CMSIS\RTOS2\RTX\Template\Events.c
-      Source file:   CMSIS\RTOS2\RTX\Template\main.c
-      Source file:   CMSIS\RTOS2\RTX\Template\MemPool.c
-      Source file:   CMSIS\RTOS2\RTX\Template\svc_user.c
-      Source file:   CMSIS\RTOS2\RTX\Template\Semaphore.c
+   * Component: ARM::CMSIS:RTOS2:Keil RTX5:Library:5.1.0
+      Library file:  CMSIS\RTOS2\RTX\Library\ARM\RTX_CM3.lib
       Source file:   CMSIS\RTOS2\RTX\Template\Thread.c
       Source file:   CMSIS\RTOS2\RTX\Source\rtx_lib.c
-      Source file:   CMSIS\RTOS2\RTX\Template\Timer.c
+      Include file:  CMSIS\RTOS2\RTX\Include\rtx_os.h
+      Source file:   CMSIS\RTOS2\RTX\Config\RTX_Config.c
       Source file:   CMSIS\RTOS2\RTX\Template\Mutex.c
-      Library file:  CMSIS\RTOS2\RTX\Library\ARM\RTX_CM3.lib
+      Source file:   CMSIS\RTOS2\RTX\Template\MemPool.c
+      Include file:  CMSIS\RTOS2\RTX\Config\RTX_Config.h
+      Source file:   CMSIS\RTOS2\RTX\Template\main.c
+      Source file:   CMSIS\RTOS2\RTX\Template\Events.c
+      Source file:   CMSIS\RTOS2\RTX\Template\MsgQueue.c
+      Source file:   CMSIS\RTOS2\RTX\Template\Semaphore.c
+      Source file:   CMSIS\RTOS2\RTX\Template\Timer.c
 
-   * Component: ARM::CMSIS:CORE:5.4.0
+   * Component: ARM::CMSIS:CORE:5.0.1
 
-   * Component: ::CMSIS:RTOS2:2.1.3 (API)
+   * Component: ::CMSIS:RTOS2:2.1.0 (API)
       Include file:  CMSIS\RTOS2\Include\cmsis_os2.h
 Build Time Elapsed:  00:00:01
 </pre>

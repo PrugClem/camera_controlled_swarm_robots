@@ -568,13 +568,13 @@ ARM Macro Assembler    Page 9
 Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M3 --apcs=interw
 ork --depend=.\objects\startup_stm32f10x_cl.d -o.\objects\startup_stm32f10x_cl.
 o -I.\RTE\CMSIS -I.\RTE\Device\STM32F107RB -I.\RTE\_ARM_Minalsystem -IC:\Keil_v
-5\ARM\PACK\ARM\CMSIS\5.7.0\CMSIS\Core\Include -IC:\Keil_v5\ARM\PACK\ARM\CMSIS\5
-.7.0\CMSIS\RTOS2\Include -IC:\Keil_v5\ARM\PACK\ARM\CMSIS\5.7.0\CMSIS\RTOS2\RTX\
-Include -IC:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\2.3.0\Device\Include -IC:\Keil
-_v5\ARM\PACK\Keil\STM32F1xx_DFP\2.3.0\Device\StdPeriph_Driver\inc --predefine="
-__EVAL SETA 1" --predefine="__UVISION_VERSION SETA 524" --predefine="_RTE_ SETA
- 1" --predefine="STM32F10X_CL SETA 1" --list=.\listings\startup_stm32f10x_cl.ls
-t RTE\Device\STM32F107RB\startup_stm32f10x_cl.s
+5\ARM\PACK\ARM\CMSIS\5.0.1\CMSIS\Include -IC:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.1\
+CMSIS\RTOS2\Include -IC:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.1\CMSIS\RTOS2\RTX\Inclu
+de -IC:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\2.3.0\Device\Include -IC:\Keil_v5\A
+RM\PACK\Keil\STM32F1xx_DFP\2.3.0\Device\StdPeriph_Driver\inc --predefine="__EVA
+L SETA 1" --predefine="__UVISION_VERSION SETA 524" --predefine="_RTE_ SETA 1" -
+-predefine="STM32F10X_CL SETA 1" --list=.\listings\startup_stm32f10x_cl.lst RTE
+\Device\STM32F107RB\startup_stm32f10x_cl.s
 
 
 
