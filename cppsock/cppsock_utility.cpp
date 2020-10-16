@@ -2,16 +2,13 @@
 
 using namespace cppsock;
 
-error_t cppsock::tcp_server_setup(cppsock::socket& listener, const char* hostname, uint16_t port, int backlog)
+error_t cppsock::tcp_server_setup(cppsock::socket &listener, const char *hostname, const char *service, int backlog)
 {
     std::vector<cppsock::addressinfo> res;
     addressinfo hints;
-    std::stringstream ss;
 
-    ss.clear();
-    ss << port;
     hints.reset().set_socktype(SOCK_STREAM).set_protocol(IPPROTO_TCP).data()->ai_flags |= AI_PASSIVE; // set hints to TCP for bind()-ing
-    cppsock::getaddrinfo(hostname, ss.str().c_str(), &hints, res);   // get addresses to bind
+    cppsock::getaddrinfo(hostname, service, &hints, res);   // get addresses to bind
     for(addressinfo &ai : res) // go through every address
     {                        // if an error occurs, continue jumps here and the loop starts over with the next address
         listener.close(); errno = 0;                                                             // close listener socket and discard the content of errno
@@ -22,16 +19,14 @@ error_t cppsock::tcp_server_setup(cppsock::socket& listener, const char* hostnam
     }
     return 1; // if this is reached, no address coule be used to bind
 }
-error_t cppsock::tcp_client_connect(cppsock::socket& client, const char* hostname, uint16_t port)
+
+error_t cppsock::tcp_client_connect(cppsock::socket &client, const char *hostname, const char *service)
 {
     std::vector<cppsock::addressinfo> res;
     addressinfo hints;
-    std::stringstream ss;
 
-    ss.clear();
-    ss << port;
     hints.reset().set_socktype(SOCK_STREAM).set_protocol(IPPROTO_TCP); // set hints to TCP for connect()-ing
-    cppsock::getaddrinfo(hostname, ss.str().c_str(), &hints, res);// get addresses to connect, no hints used
+    cppsock::getaddrinfo(hostname, service, &hints, res);// get addresses to connect, no hints used
     for(addressinfo &addr : res) // go through every address
     {
         client.init(addr.get_family(), addr.get_socktype(), addr.get_protocol()); // init client socket
@@ -45,4 +40,21 @@ error_t cppsock::tcp_client_connect(cppsock::socket& client, const char* hostnam
         }
     }
     return -1; // no address could be connected to
+}
+
+error_t cppsock::tcp_server_setup(cppsock::socket& listener, const char* hostname, uint16_t port, int backlog)
+{
+    std::stringstream ss;
+
+    ss.clear();
+    ss << port;
+    return tcp_server_setup(listener, hostname, ss.str().c_str(), backlog);
+}
+error_t cppsock::tcp_client_connect(cppsock::socket& client, const char* hostname, uint16_t port)
+{
+    std::stringstream ss;
+
+    ss.clear();
+    ss << port;
+    return tcp_client_connect(client, hostname, ss.str().c_str());
 }

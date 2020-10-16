@@ -92,6 +92,8 @@ namespace cppsock
         std::string get_addr() const;
         uint16_t get_port() const; /** port in host byte order */
 
+        bool operator==(const socketaddr& other) const;
+        bool operator!=(const socketaddr& other) const;
     };
 
     class addressinfo
@@ -163,6 +165,8 @@ namespace cppsock
         bool    get_reuseaddr() const;
     };
 
+    error_t tcp_server_setup(socket &listener, const char *hostname, const char *service, int backlog);
+    error_t tcp_client_connect(socket &listener, const char *hostname, const char *service);
     error_t tcp_server_setup(socket& listener, const char* hostname, uint16_t port, int backlog);
     error_t tcp_client_connect(socket& client, const char* hostname, uint16_t port);
 } // namespace cppsock

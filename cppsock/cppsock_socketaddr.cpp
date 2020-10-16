@@ -138,8 +138,9 @@ error_t socketaddr::get_addr(std::string &buf) const
     {
         return EAFNOSUPPORT;
     }
-    buf.resize(INET6_ADDRSTRLEN);
+    buf.resize(INET6_ADDRSTRLEN); // preallocate memory for address
     inet_ntop(this->sa.sa_family, (void*)addrptr, &buf[0], INET6_ADDRSTRLEN); // typecast to void* is needed because windows is stupid and needs a non-const pointer
+    buf = buf.c_str(); // reinterpret string to cut additional '\0' characters at the end since this can cause problems
     return 0;
 }
 
@@ -177,4 +178,14 @@ uint16_t socketaddr::get_port() const
     uint16_t ret(0);
     this->get_port(ret);
     return ret;
+}
+
+bool cppsock::socketaddr::operator==(const socketaddr& other) const
+{
+    return memcmp(&this->sa, &other.sa, sizeof(this->sa)) == 0;
+}
+
+bool cppsock::socketaddr::operator!=(const socketaddr& other) const
+{
+    return memcmp(&this->sa, &other.sa, sizeof(this->sa)) != 0;
 }

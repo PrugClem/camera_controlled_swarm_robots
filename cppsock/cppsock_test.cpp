@@ -18,10 +18,17 @@ int main()
     listener.accept(server);
 
     std::clog << std::endl;
+    std::clog << "listener sockname " << listener.getsockname().get_addr() << " " << listener.getsockname().get_port() << std::endl;
+    std::clog << std::endl;
     std::clog << "client sockname " << client.getsockname().get_addr() << " " << client.getsockname().get_port() << std::endl;
     std::clog << "client peername " << client.getpeername().get_addr() << " " << client.getpeername().get_port() << std::endl;
     std::clog << "server sockname " << server.getsockname().get_addr() << " " << server.getsockname().get_port() << std::endl;
     std::clog << "server peername " << server.getpeername().get_addr() << " " << server.getpeername().get_port() << std::endl;
+    std::clog << std::endl;
+    std::clog << "Address length: " << server.getsockname().get_addr().length() << std::endl;
+    std::clog << "server sockname != listener sockname: " << (server.getsockname() != listener.getsockname()) << std::endl;
+    std::clog << "server peername == client sockname: " << (server.getpeername() == client.getsockname()) << std::endl;
+    std::clog << "listener address == \"::\": " << (listener.getsockname().get_addr() == "::") << std::endl;
     std::clog << std::endl;
 
     errno = 0;
