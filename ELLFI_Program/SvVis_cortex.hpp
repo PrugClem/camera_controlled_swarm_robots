@@ -42,11 +42,12 @@ struct SvVis3_data_t
 
 class SvVis3_t
 {
+public:
     USART_TypeDef *port;
-    osThreadId_t thread_usart;
+    //osThreadId_t thread_usart;
     osThreadId_t thread_recv, thread_send;
     osMessageQueueId_t queue_usart, queue_recv, queue_send;
-public:
+    
     void init(USART_TypeDef *port, uint32_t baud);
 
     void send(SvVis3_message_t &msgbuf);
@@ -55,10 +56,6 @@ public:
     void send(SvVis3_channel_t channel, int32_t data);
     void send(SvVis3_channel_t channel, float data);
     void recv(SvVis3_message_t &msgbuf);
-
-    friend __NO_RETURN void usart_thread(void *arg);
-    friend __NO_RETURN void recv_thread(void *arg);
-    friend __NO_RETURN void send_thread(void *arg);
 };
 
 extern SvVis3_t *_usart1_handler, *_usart2_handler, *_usart3_handler;
@@ -66,7 +63,7 @@ extern SvVis3_t *_usart1_handler, *_usart2_handler, *_usart3_handler;
 void init_usart(USART_TypeDef *usartn, uint32_t baud);
 void USART_send_bytes(USART_TypeDef* port, void *start, size_t len);
 void USART_send_byte(USART_TypeDef* port, uint8_t byte);
-__NO_RETURN void usart_thread(void *arg);
+//__NO_RETURN void usart_thread(void *arg);
 __NO_RETURN void recv_thread(void *arg);
 __NO_RETURN void send_thread(void *arg);
 

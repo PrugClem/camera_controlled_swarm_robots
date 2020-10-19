@@ -12,7 +12,7 @@ int main(void)
     SystemCoreClockUpdate();
     if(osKernelInitialize() == osOK)
     {
-        tar.init(USART2, USART_BAUD_9600);
+        tar.init(USART1, USART_BAUD_9600);
         motor_init();
         main_thread_handle = osThreadNew(main_thread_func, &tar, NULL);
         osKernelStart();

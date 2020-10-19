@@ -9,7 +9,7 @@ uint8_t chid2len(uint8_t chid)
     return 0;
 }
 
-__NO_RETURN void usart_thread(void *arg)
+/*__NO_RETURN void usart_thread(void *arg)
 {
     SvVis3_t *tar = (SvVis3_t*) arg;
     char input;
@@ -19,6 +19,30 @@ __NO_RETURN void usart_thread(void *arg)
         input = USART_ReceiveData(tar->port);
         osMessageQueuePut(tar->queue_usart, &input, nullptr, osWaitForever);
     }
+}*/
+
+extern "C" void USART1_IRQHandler(void)
+{
+    char input;
+    input = USART_ReceiveData(USART1);
+    osMessageQueuePut(_usart1_handler->queue_usart, &input, nullptr, 0);
+    return;
+}
+
+extern "C" void USART2_IRQHandler(void)
+{
+    char input;
+    input = USART_ReceiveData(USART2);
+    osMessageQueuePut(_usart2_handler->queue_usart, &input, nullptr, 0);
+    return;
+}
+
+extern "C" void USART3_IRQHandler(void)
+{
+    char input;
+    input = USART_ReceiveData(USART3);
+    osMessageQueuePut(_usart3_handler->queue_usart, &input, nullptr, 0);
+    return;
 }
 
 __NO_RETURN void recv_thread(void *arg)

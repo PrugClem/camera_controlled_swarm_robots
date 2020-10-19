@@ -8,12 +8,15 @@ void init_usart(USART_TypeDef *usartn, uint32_t baud)
     GPIO_InitTypeDef RX, TX;
     USART_InitTypeDef usart;
     USART_ClockInitTypeDef usart_clock;
+    NVIC_InitTypeDef nvic;
 
     SystemCoreClockUpdate();
 
     TX.GPIO_Mode =  GPIO_Mode_AF_PP;
     RX.GPIO_Mode = GPIO_Mode_IN_FLOATING;
     RX.GPIO_Speed = TX.GPIO_Speed = GPIO_Speed_50MHz;
+    nvic.NVIC_IRQChannelPreemptionPriority = 0;
+    nvic.NVIC_IRQChannelSubPriority = 0;
     if(usartn == USART1)
     {
         // init USART1 RX(PA10) and TX(PA9)
@@ -22,6 +25,11 @@ void init_usart(USART_TypeDef *usartn, uint32_t baud)
         GPIO_Init(GPIOA, &RX);
         TX.GPIO_Pin = GPIO_Pin_9;
         GPIO_Init(GPIOA, &TX);
+
+        nvic.NVIC_IRQChannel = USART1_IRQn;
+        nvic.NVIC_IRQChannelCmd = ENABLE;
+
+        //USART_ITConfig(USART1, USART_IT_RXNE, ENABLE);
     }
     else if(usartn == USART2)
     {
@@ -32,6 +40,11 @@ void init_usart(USART_TypeDef *usartn, uint32_t baud)
         GPIO_Init(GPIOA, &RX);
         TX.GPIO_Pin = GPIO_Pin_2;
         GPIO_Init(GPIOA, &TX);
+
+        nvic.NVIC_IRQChannel = USART2_IRQn;
+        nvic.NVIC_IRQChannelCmd = ENABLE;
+
+        //USART_ITConfig(USART2, USART_IT_RXNE, ENABLE);
     }
     else if(usartn == USART3)
     {
@@ -42,6 +55,11 @@ void init_usart(USART_TypeDef *usartn, uint32_t baud)
         GPIO_Init(GPIOB, &RX);
         TX.GPIO_Pin = GPIO_Pin_10;
         GPIO_Init(GPIOB, &TX);
+
+        nvic.NVIC_IRQChannel = USART3_IRQn;
+        nvic.NVIC_IRQChannelCmd = ENABLE;
+
+        //USART_ITConfig(USART3, USART_IT_RXNE, ENABLE);
     }
     else
     {
@@ -66,6 +84,11 @@ void init_usart(USART_TypeDef *usartn, uint32_t baud)
 	usart.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
 
 	USART_Init(usartn, &usart);
+    NVIC_Init(&nvic);
+
+    if(usartn == USART1)      USART_ITConfig(USART1, USART_IT_RXNE, ENABLE);
+    else if(usartn == USART2) USART_ITConfig(USART2, USART_IT_RXNE, ENABLE);
+    else if(usartn == USART3) USART_ITConfig(USART3, USART_IT_RXNE, ENABLE);
 
 	USART_Cmd(usartn, ENABLE);
 }
@@ -89,11 +112,11 @@ void SvVis3_t::init(USART_TypeDef *port, uint32_t baud)
     else if(port == USART2) _usart2_handler = this;
     else if(port == USART3) _usart3_handler = this;
 
-    this->queue_usart = osMessageQueueNew(SvVis3_USART_BACKLOG, sizeof(char), nullptr);
-    this->queue_recv  = osMessageQueueNew(SvVIS3_RECV_BACKLOG, sizeof(SvVis3_message_t), nullptr);
     this->queue_send  = osMessageQueueNew(SvVIS3_SEND_BACKLOG, sizeof(SvVis3_message_t), nullptr);
+    this->queue_recv  = osMessageQueueNew(SvVIS3_RECV_BACKLOG, sizeof(SvVis3_message_t), nullptr);
+    this->queue_usart = osMessageQueueNew(SvVis3_USART_BACKLOG, sizeof(char), nullptr);
 
-    this->thread_usart = osThreadNew(usart_thread, this, nullptr);
+    //this->thread_usart = osThreadNew(usart_thread, this, nullptr);
     this->thread_recv = osThreadNew(recv_thread, this, nullptr);
     this->thread_send = osThreadNew(send_thread, this, nullptr);
 }
