@@ -25,17 +25,22 @@ void main_thread_func(void *arg)
 {
     SvVis3_t *tar = (SvVis3_t*)arg;
     SvVis3_message_t msg;
-    tar->send("Supported Commands:");
-    tar->send("STOP Stop");
-    tar->send("FW   Move Forard");
-    tar->send("BW   Move Backwards");
-    tar->send("RR   Rotate Right");
-    tar->send("RL   Rotate Left");
     for(;;)
     {
-        tar->recv(msg);
-        tar->send("confirm message");
-        tar->send(msg);
+        tar->recv_msg(msg);
+        
+        tar->send_str("confirm message");
+        tar->send_msg(msg);
+
+        if(strcmp(msg.data.raw, "help") == 0)
+        {
+            tar->send_str("Supported Commands:");
+            tar->send_str("STOP Stop");
+            tar->send_str("FW   Move Forard");
+            tar->send_str("BW   Move Backwards");
+            tar->send_str("RR   Rotate Right");
+            tar->send_str("RL   Rotate Left");
+        }
 
         motor_cmd_str(msg.data.raw);
     }

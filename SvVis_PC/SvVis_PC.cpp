@@ -24,36 +24,7 @@ void SvVis3_data_t::apply_msg(SvVis3_message_t &msg)
 
 bool SvVis::open(const std::string &conv_ser, uint16_t conv_port)
 {
-#if 0
-    std::vector<cppsock::addressinfo> res;
-    cppsock::socketaddr addr;
-
-    if((cppsock::socketaddr::is(AF_INET, conv_ser)) || (cppsock::socketaddr::is(AF_INET6, conv_ser)))
-    {
-        addr.set(conv_ser, conv_port);
-    }
-    else
-    {
-        cppsock::resolve_tcp(conv_ser.c_str(), res, AF_INET);
-        if(res.size() == 0) return false;
-        addr = res.at(0);
-        addr.set_port(conv_port);
-    }
-
-    //std::clog << "SvVis connect address: " << addr.get_family() << " " << addr.get_addr() << " " << addr.get_port() << std::endl;
-
-    if( this->sock.init(addr.get_family(), SOCK_STREAM, IPPROTO_TCP) == SOCKET_ERROR )
-        return false;
-    if( this->sock.connect(addr) == SOCKET_ERROR )
-    {
-        //std::cerr << "error connecting to " << addr.get_addr() << " (port " << addr.get_port() << "): " << strerror(errno) << std::endl;
-        this->sock.close();
-        return false;
-    }
-    return true;
-#else
     return cppsock::tcp_client_connect(this->sock, conv_ser.c_str(), conv_port) == 0;
-#endif
 }
 
 bool SvVis::is_open(void)

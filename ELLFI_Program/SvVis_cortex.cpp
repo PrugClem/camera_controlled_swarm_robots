@@ -121,12 +121,12 @@ void SvVis3_t::init(USART_TypeDef *port, uint32_t baud)
     this->thread_send = osThreadNew(send_thread, this, nullptr);
 }
 
-void SvVis3_t::send(SvVis3_message_t &message)
+void SvVis3_t::send_msg(SvVis3_message_t &message)
 {
     while(osMessageQueueGetSpace(this->queue_send) < 2) {osThreadYield();} // wait for available space in send queue
     osMessageQueuePut(this->queue_send, &message, nullptr, osWaitForever);
 }
-void SvVis3_t::send(const char *str)
+void SvVis3_t::send_str(const char *str)
 {
     size_t len = strlen(str)+1;
 	bool too_long = (len >= SvVIS3_DATA_MAX_LEN);
@@ -136,37 +136,37 @@ void SvVis3_t::send(const char *str)
     message.len = len;
     memcpy(message.data.raw, str, len);
 	if(too_long) {message.data.raw[SvVIS3_DATA_MAX_LEN-1] = 0; /*USART_send_byte(USART1, '#');*/} else {/*USART_send_byte(USART1, '!');*/}
-    this->send(message);
+    this->send_msg(message);
 }
-void SvVis3_t::send(SvVis3_channel_t channel, int16_t data)
+void SvVis3_t::send_i16(SvVis3_channel_t channel, int16_t data)
 {
     size_t len = sizeof(data);
     SvVis3_message_t message;
     message.channel = SvVIS3_I16_CHANNEL_BASE + channel;
     message.len = len;
     message.data.i16 = data;
-    this->send(message);
+    this->send_msg(message);
 }
-void SvVis3_t::send(SvVis3_channel_t channel, int32_t data)
+void SvVis3_t::send_i32(SvVis3_channel_t channel, int32_t data)
 {
     size_t len = sizeof(data);
     SvVis3_message_t message;
     message.channel = SvVIS3_I32_CHANNEL_BASE + channel;
     message.len = len;
     message.data.i32 = data;
-    this->send(message);
+    this->send_msg(message);
 }
-void SvVis3_t::send(SvVis3_channel_t channel, float data)
+void SvVis3_t::send_float(SvVis3_channel_t channel, float data)
 {
     size_t len = sizeof(data);
     SvVis3_message_t message;
     message.channel = SvVIS3_FLOAT_CHANNEL_BASE + channel;
     message.len = len;
     message.data.f = data;
-    this->send(message);
+    this->send_msg(message);
 }
 
-void SvVis3_t::recv(SvVis3_message_t &msg_buf)
+void SvVis3_t::recv_msg(SvVis3_message_t &msg_buf)
 {
     osMessageQueueGet(this->queue_recv, &msg_buf, NULL, osWaitForever);
 }

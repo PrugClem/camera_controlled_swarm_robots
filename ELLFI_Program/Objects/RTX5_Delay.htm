@@ -3,7 +3,7 @@
 <title>Static Call Graph - [.\Objects\RTX5_Delay.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\Objects\RTX5_Delay.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060528: Last Updated: Fri Oct 16 14:49:45 2020
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060528: Last Updated: Fri Nov 13 10:04:35 2020
 <BR><P>
 <H3>Maximum Stack Usage =        168 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -490,16 +490,16 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> startup_stm32f10x_cl.o(RESET)
 </UL>
-<P><STRONG><a name="[be]"></a>strlen</STRONG> (Thumb, 62 bytes, Stack size 8 bytes, strlen.o(.text))
+<P><STRONG><a name="[bf]"></a>strlen</STRONG> (Thumb, 62 bytes, Stack size 8 bytes, strlen.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = strlen
 </UL>
-<BR>[Called By]<UL><LI><a href="#[b8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SvVis3_t::send(const char*)
+<BR>[Called By]<UL><LI><a href="#[b9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SvVis3_t::send_str(const char*)
 </UL>
 
 <P><STRONG><a name="[70]"></a>__aeabi_memcpy</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, rt_memcpy_v6.o(.text))
 <BR><BR>[Called By]<UL><LI><a href="#[72]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osMessageQueuePut
 <LI><a href="#[6f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osMessageQueueGet
-<LI><a href="#[b8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SvVis3_t::send(const char*)
+<LI><a href="#[b9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SvVis3_t::send_str(const char*)
 <LI><a href="#[92]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;svcRtxMessageQueuePut
 <LI><a href="#[8c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;svcRtxMessageQueueGet
 <LI><a href="#[74]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osRtxMessageQueuePostProcess
@@ -546,6 +546,7 @@ Global Symbols
 
 <P><STRONG><a name="[b4]"></a>strcmp</STRONG> (Thumb, 128 bytes, Stack size 0 bytes, strcmpv7m.o(.text))
 <BR><BR>[Called By]<UL><LI><a href="#[b3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;motor_cmd_str(const char*)
+<LI><a href="#[4e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main_thread_func(void*)
 </UL>
 
 <P><STRONG><a name="[f0]"></a>__use_two_region_memory</STRONG> (Thumb, 2 bytes, Stack size 0 bytes, heapauxi.o(.text), UNUSED)
@@ -620,11 +621,11 @@ Global Symbols
 </UL>
 <BR>[Called By]<UL><LI><a href="#[4d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;send_thread(void*)
 <LI><a href="#[4c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;recv_thread(void*)
-<LI><a href="#[b9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SvVis3_t::recv(SvVis3_message_t&)
+<LI><a href="#[b8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SvVis3_t::recv_msg(SvVis3_message_t&)
 </UL>
 
-<P><STRONG><a name="[bf]"></a>osMessageQueueGetSpace</STRONG> (Thumb, 56 bytes, Stack size 0 bytes, rtx_msgqueue.o(.text.osMessageQueueGetSpace))
-<BR><BR>[Called By]<UL><LI><a href="#[ba]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SvVis3_t::send(SvVis3_message_t&)
+<P><STRONG><a name="[be]"></a>osMessageQueueGetSpace</STRONG> (Thumb, 56 bytes, Stack size 0 bytes, rtx_msgqueue.o(.text.osMessageQueueGetSpace))
+<BR><BR>[Called By]<UL><LI><a href="#[ba]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SvVis3_t::send_msg(SvVis3_message_t&)
 </UL>
 
 <P><STRONG><a name="[bc]"></a>osMessageQueueNew</STRONG> (Thumb, 58 bytes, Stack size 0 bytes, rtx_msgqueue.o(.text.osMessageQueueNew))
@@ -642,7 +643,7 @@ Global Symbols
 <LI><a href="#[33]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USART2_IRQHandler
 <LI><a href="#[32]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USART1_IRQHandler
 <LI><a href="#[4c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;recv_thread(void*)
-<LI><a href="#[ba]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SvVis3_t::send(SvVis3_message_t&)
+<LI><a href="#[ba]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SvVis3_t::send_msg(SvVis3_message_t&)
 <LI><a href="#[80]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osRtxTimerTick
 </UL>
 
@@ -873,7 +874,7 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[b5]"></a>osThreadYield</STRONG> (Thumb, 36 bytes, Stack size 0 bytes, rtx_thread.o(.text.osThreadYield))
-<BR><BR>[Called By]<UL><LI><a href="#[ba]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SvVis3_t::send(SvVis3_message_t&)
+<BR><BR>[Called By]<UL><LI><a href="#[ba]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SvVis3_t::send_msg(SvVis3_message_t&)
 <LI><a href="#[ae]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USART_send_byte(USART_TypeDef*, unsigned char)
 </UL>
 
@@ -1184,13 +1185,14 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[4d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;send_thread(void*)
 </UL>
 
-<P><STRONG><a name="[4e]"></a>main_thread_func(void*)</STRONG> (Thumb, 88 bytes, Stack size 40 bytes, main.o(i._Z16main_thread_funcPv))
-<BR><BR>[Stack]<UL><LI>Max Depth = 152<LI>Call Chain = main_thread_func(void*) &rArr; SvVis3_t::send(const char*) &rArr; SvVis3_t::send(SvVis3_message_t&) &rArr; osMessageQueuePut &rArr; osRtxPostProcess
+<P><STRONG><a name="[4e]"></a>main_thread_func(void*)</STRONG> (Thumb, 100 bytes, Stack size 40 bytes, main.o(i._Z16main_thread_funcPv))
+<BR><BR>[Stack]<UL><LI>Max Depth = 152<LI>Call Chain = main_thread_func(void*) &rArr; SvVis3_t::send_str(const char*) &rArr; SvVis3_t::send_msg(SvVis3_message_t&) &rArr; osMessageQueuePut &rArr; osRtxPostProcess
 </UL>
 <BR>[Calls]<UL><LI><a href="#[b3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;motor_cmd_str(const char*)
-<LI><a href="#[ba]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SvVis3_t::send(SvVis3_message_t&)
-<LI><a href="#[b8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SvVis3_t::send(const char*)
-<LI><a href="#[b9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SvVis3_t::recv(SvVis3_message_t&)
+<LI><a href="#[b9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SvVis3_t::send_str(const char*)
+<LI><a href="#[ba]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SvVis3_t::send_msg(SvVis3_message_t&)
+<LI><a href="#[b8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SvVis3_t::recv_msg(SvVis3_message_t&)
+<LI><a href="#[b4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;strcmp
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> main.o(i.main)
 </UL>
@@ -1208,33 +1210,33 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[60]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[b9]"></a>SvVis3_t::recv(SvVis3_message_t&)</STRONG> (Thumb, 22 bytes, Stack size 16 bytes, svvis_cortex.o(i._ZN8SvVis3_t4recvER16SvVis3_message_t))
-<BR><BR>[Stack]<UL><LI>Max Depth = 56<LI>Call Chain = SvVis3_t::recv(SvVis3_message_t&) &rArr; osMessageQueueGet &rArr; osRtxPostProcess
+<P><STRONG><a name="[b8]"></a>SvVis3_t::recv_msg(SvVis3_message_t&)</STRONG> (Thumb, 22 bytes, Stack size 16 bytes, svvis_cortex.o(i._ZN8SvVis3_t8recv_msgER16SvVis3_message_t))
+<BR><BR>[Stack]<UL><LI>Max Depth = 56<LI>Call Chain = SvVis3_t::recv_msg(SvVis3_message_t&) &rArr; osMessageQueueGet &rArr; osRtxPostProcess
 </UL>
 <BR>[Calls]<UL><LI><a href="#[6f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osMessageQueueGet
 </UL>
 <BR>[Called By]<UL><LI><a href="#[4e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main_thread_func(void*)
 </UL>
 
-<P><STRONG><a name="[b8]"></a>SvVis3_t::send(const char*)</STRONG> (Thumb, 74 bytes, Stack size 56 bytes, svvis_cortex.o(i._ZN8SvVis3_t4sendEPKc))
-<BR><BR>[Stack]<UL><LI>Max Depth = 112<LI>Call Chain = SvVis3_t::send(const char*) &rArr; SvVis3_t::send(SvVis3_message_t&) &rArr; osMessageQueuePut &rArr; osRtxPostProcess
-</UL>
-<BR>[Calls]<UL><LI><a href="#[ba]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SvVis3_t::send(SvVis3_message_t&)
-<LI><a href="#[70]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memcpy
-<LI><a href="#[be]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;strlen
-</UL>
-<BR>[Called By]<UL><LI><a href="#[4e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main_thread_func(void*)
-</UL>
-
-<P><STRONG><a name="[ba]"></a>SvVis3_t::send(SvVis3_message_t&)</STRONG> (Thumb, 38 bytes, Stack size 16 bytes, svvis_cortex.o(i._ZN8SvVis3_t4sendER16SvVis3_message_t))
-<BR><BR>[Stack]<UL><LI>Max Depth = 56<LI>Call Chain = SvVis3_t::send(SvVis3_message_t&) &rArr; osMessageQueuePut &rArr; osRtxPostProcess
+<P><STRONG><a name="[ba]"></a>SvVis3_t::send_msg(SvVis3_message_t&)</STRONG> (Thumb, 38 bytes, Stack size 16 bytes, svvis_cortex.o(i._ZN8SvVis3_t8send_msgER16SvVis3_message_t))
+<BR><BR>[Stack]<UL><LI>Max Depth = 56<LI>Call Chain = SvVis3_t::send_msg(SvVis3_message_t&) &rArr; osMessageQueuePut &rArr; osRtxPostProcess
 </UL>
 <BR>[Calls]<UL><LI><a href="#[b5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osThreadYield
 <LI><a href="#[72]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osMessageQueuePut
-<LI><a href="#[bf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osMessageQueueGetSpace
+<LI><a href="#[be]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osMessageQueueGetSpace
 </UL>
 <BR>[Called By]<UL><LI><a href="#[4e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main_thread_func(void*)
-<LI><a href="#[b8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SvVis3_t::send(const char*)
+<LI><a href="#[b9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SvVis3_t::send_str(const char*)
+</UL>
+
+<P><STRONG><a name="[b9]"></a>SvVis3_t::send_str(const char*)</STRONG> (Thumb, 74 bytes, Stack size 56 bytes, svvis_cortex.o(i._ZN8SvVis3_t8send_strEPKc))
+<BR><BR>[Stack]<UL><LI>Max Depth = 112<LI>Call Chain = SvVis3_t::send_str(const char*) &rArr; SvVis3_t::send_msg(SvVis3_message_t&) &rArr; osMessageQueuePut &rArr; osRtxPostProcess
+</UL>
+<BR>[Calls]<UL><LI><a href="#[ba]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SvVis3_t::send_msg(SvVis3_message_t&)
+<LI><a href="#[70]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memcpy
+<LI><a href="#[bf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;strlen
+</UL>
+<BR>[Called By]<UL><LI><a href="#[4e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main_thread_func(void*)
 </UL>
 
 <P><STRONG><a name="[51]"></a>_mutex_acquire</STRONG> (Thumb, 22 bytes, Stack size 8 bytes, rtx_lib.o(i._mutex_acquire), UNUSED, KEPT)

@@ -7,11 +7,13 @@ int main()
 {
     SvVis cortex;
     SvVis3_message_t msg;
+    std::cout << "starting" << std::endl;
     if(!cortex.open("localhost", 10001))
     {
         std::cout << "unable to connect to conversion server" << std::endl;
         exit(EXIT_FAILURE);
     }
+    std::cout << "connection opened" << std::endl;
     cortex.send_string("abcdefghijklmnopqrstuvwxyz0123456789");
     cortex.recv_msg(msg); // message received
     std::cout << msg.data.raw << std::endl;

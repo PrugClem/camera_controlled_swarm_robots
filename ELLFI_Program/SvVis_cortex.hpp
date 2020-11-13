@@ -50,12 +50,12 @@ public:
     
     void init(USART_TypeDef *port, uint32_t baud);
 
-    void send(SvVis3_message_t &msgbuf);
-    void send(const char *str);
-    void send(SvVis3_channel_t channel, int16_t data);
-    void send(SvVis3_channel_t channel, int32_t data);
-    void send(SvVis3_channel_t channel, float data);
-    void recv(SvVis3_message_t &msgbuf);
+    void send_msg(SvVis3_message_t &msgbuf);
+    void send_str(const char *str);
+    void send_i16(SvVis3_channel_t channel, int16_t data);
+    void send_i32(SvVis3_channel_t channel, int32_t data);
+    void send_float(SvVis3_channel_t channel, float data);
+    void recv_msg(SvVis3_message_t &msgbuf);
 };
 
 extern SvVis3_t *_usart1_handler, *_usart2_handler, *_usart3_handler;
