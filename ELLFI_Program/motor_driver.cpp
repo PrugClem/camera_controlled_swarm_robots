@@ -7,44 +7,42 @@ void motor_init(void)
     gpio.GPIO_Mode = GPIO_Mode_Out_PP;
     gpio.GPIO_Speed = GPIO_Speed_50MHz;
     //enable GPIOB and GPIOC
-    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB | RCC_APB2Periph_GPIOC, ENABLE);
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
 
-    //set PB6 and PB7 as output
-    gpio.GPIO_Pin = GPIO_Pin_6;
-    GPIO_Init(GPIOB, &gpio);
-    gpio.GPIO_Pin = GPIO_Pin_7;
-    GPIO_Init(GPIOB, &gpio);
+    //set PA4 as output for enable signal
+    gpio.GPIO_Pin = GPIO_Pin_4;
+    GPIO_Init(GPIOA, &gpio);
 
-    // set PC0 - PC3 as output
+    // set PA0,PA1, PA6,PA7 as output for motor control signals
     gpio.GPIO_Pin = GPIO_Pin_0;
-    GPIO_Init(GPIOC, &gpio);
+    GPIO_Init(GPIOA, &gpio);
     gpio.GPIO_Pin = GPIO_Pin_1;
-    GPIO_Init(GPIOC, &gpio);
-    gpio.GPIO_Pin = GPIO_Pin_2;
-    GPIO_Init(GPIOC, &gpio);
-    gpio.GPIO_Pin = GPIO_Pin_3;
-    GPIO_Init(GPIOC, &gpio);
+    GPIO_Init(GPIOA, &gpio);
+    gpio.GPIO_Pin = GPIO_Pin_6;
+    GPIO_Init(GPIOA, &gpio);
+    gpio.GPIO_Pin = GPIO_Pin_7;
+    GPIO_Init(GPIOA, &gpio);
 }
 
 void motor_cmd_str(const char* cmd)
 {
-    if( strcmp(cmd, "STOP") == 0 )
+    if( strcmp(cmd, "stop") == 0 )
     {
         motor_cmd_bin(MOTOR_CMD_STOP);
     }
-    else if( strcmp(cmd, "FW") == 0 )
+    else if( strcmp(cmd, "fw") == 0 )
     {
         motor_cmd_bin(MOTOR_CMD_FW);
     }
-    else if( strcmp(cmd, "BW") == 0 )
+    else if( strcmp(cmd, "bw") == 0 )
     {
         motor_cmd_bin(MOTOR_CMD_BW);
     }
-    else if( strcmp(cmd, "RR") == 0 )
+    else if( strcmp(cmd, "rr") == 0 )
     {
         motor_cmd_bin(MOTOR_CMD_RR);
     }
-    else if( strcmp(cmd, "RL") == 0 )
+    else if( strcmp(cmd, "rl") == 0 )
     {
         motor_cmd_bin(MOTOR_CMD_RL);
     }
@@ -59,32 +57,37 @@ void motor_cmd_bin(motor_cmd_bin_t cmd)
     switch (cmd)
     {
     case MOTOR_CMD_STOP:
-        GPIO_ResetBits(GPIOB, GPIO_Pin_6 | GPIO_Pin_7);
-        GPIO_ResetBits(GPIOC, GPIO_Pin_0 | GPIO_Pin_1 | GPIO_Pin_2 | GPIO_Pin_3);
+        // Disable Motor enable Signal
+        GPIO_ResetBits(GPIOA, GPIO_Pin_4);
+        GPIO_ResetBits(GPIOA, GPIO_Pin_0 | GPIO_Pin_1 | GPIO_Pin_6 | GPIO_Pin_7);
         break;
     case MOTOR_CMD_FW:
-        GPIO_SetBits(GPIOB, GPIO_Pin_6 | GPIO_Pin_7);
-        GPIO_SetBits(GPIOC, GPIO_Pin_0 | GPIO_Pin_2);
-        GPIO_ResetBits(GPIOC, GPIO_Pin_1 | GPIO_Pin_3);
+        // Enable Motor enable Signal
+        GPIO_SetBits(GPIOA, GPIO_Pin_4);
+        GPIO_SetBits(GPIOA, GPIO_Pin_0 | GPIO_Pin_6);
+        GPIO_ResetBits(GPIOA, GPIO_Pin_1 | GPIO_Pin_7);
         break;
     case MOTOR_CMD_BW:
-        GPIO_SetBits(GPIOB, GPIO_Pin_6 | GPIO_Pin_7);
-        GPIO_SetBits(GPIOC, GPIO_Pin_1 | GPIO_Pin_3);
-        GPIO_ResetBits(GPIOC, GPIO_Pin_0 | GPIO_Pin_2);
+        // Enable Motor enable Signal
+        GPIO_SetBits(GPIOA, GPIO_Pin_4);
+        GPIO_SetBits(GPIOA, GPIO_Pin_1 | GPIO_Pin_7);
+        GPIO_ResetBits(GPIOA, GPIO_Pin_0 | GPIO_Pin_6);
         break;
     case MOTOR_CMD_RR:
-        GPIO_SetBits(GPIOB, GPIO_Pin_6 | GPIO_Pin_7);
-        GPIO_SetBits(GPIOC, GPIO_Pin_1 | GPIO_Pin_2);
-        GPIO_ResetBits(GPIOC, GPIO_Pin_0 | GPIO_Pin_3);
+        // Enable Motor enable Signal
+        GPIO_SetBits(GPIOA, GPIO_Pin_4);
+        GPIO_SetBits(GPIOA, GPIO_Pin_1 | GPIO_Pin_6);
+        GPIO_ResetBits(GPIOA, GPIO_Pin_0 | GPIO_Pin_7);
         break;
     case MOTOR_CMD_RL:
-        GPIO_SetBits(GPIOB, GPIO_Pin_6 | GPIO_Pin_7);
-        GPIO_SetBits(GPIOC, GPIO_Pin_0 | GPIO_Pin_3);
-        GPIO_ResetBits(GPIOC, GPIO_Pin_1 | GPIO_Pin_2);
+        // Enable Motor enable Signal
+        GPIO_SetBits(GPIOA, GPIO_Pin_4);
+        GPIO_SetBits(GPIOA, GPIO_Pin_0 | GPIO_Pin_7);
+        GPIO_ResetBits(GPIOA, GPIO_Pin_1 | GPIO_Pin_6);
 
     default: // unrecognized command, stopping
-        GPIO_ResetBits(GPIOB, GPIO_Pin_6 | GPIO_Pin_7);
-        GPIO_ResetBits(GPIOC, GPIO_Pin_0 | GPIO_Pin_1 | GPIO_Pin_2 | GPIO_Pin_3);
+        GPIO_ResetBits(GPIOA, GPIO_Pin_4);
+        GPIO_ResetBits(GPIOA, GPIO_Pin_0 | GPIO_Pin_1 | GPIO_Pin_6 | GPIO_Pin_7);
         break;
     }
 }

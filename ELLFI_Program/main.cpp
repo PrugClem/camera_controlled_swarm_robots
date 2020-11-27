@@ -12,7 +12,7 @@ int main(void)
     SystemCoreClockUpdate();
     if(osKernelInitialize() == osOK)
     {
-        tar.init(USART1, USART_BAUD_9600);
+        tar.init(USART2, USART_BAUD_9600);
         motor_init();
         main_thread_handle = osThreadNew(main_thread_func, &tar, NULL);
         osKernelStart();
@@ -35,11 +35,11 @@ void main_thread_func(void *arg)
         if(strcmp(msg.data.raw, "help") == 0)
         {
             tar->send_str("Supported Commands:");
-            tar->send_str("STOP Stop");
-            tar->send_str("FW   Move Forard");
-            tar->send_str("BW   Move Backwards");
-            tar->send_str("RR   Rotate Right");
-            tar->send_str("RL   Rotate Left");
+            tar->send_str("stop Stop");
+            tar->send_str("fw   Move Forard");
+            tar->send_str("bw   Move Backwards");
+            tar->send_str("rr   Rotate Right");
+            tar->send_str("rl   Rotate Left");
         }
 
         motor_cmd_str(msg.data.raw);

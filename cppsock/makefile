@@ -1,5 +1,5 @@
 IDIR =.
-CC=gcc
+CC=g++
 CFLAGS=-I$(IDIR) -Wall -Wextra
 
 ODIR=obj
@@ -15,11 +15,12 @@ DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
 _OBJ = cppsock_addressinfo.cpp.o \
 	   cppsock_socket.cpp.o \
 	   cppsock_socketaddr.cpp.o \
-	   cppsock_utility.cpp.o
+	   cppsock_utility.cpp.o 
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
 
 $(ODIR)/%.o: % $(DEPS)
+	mkdir obj || true
 	$(CC) -c -o $@ $< $(CFLAGS)
 
 full:
@@ -31,6 +32,7 @@ test:
 		cppsock_test.cpp $(LIB_OUT)
 
 lib: $(OBJ)
+	mkdir out || true
 	ar -r -s $(LIB_OUT) $(OBJ)
 
 clear:
@@ -41,3 +43,6 @@ clear:
 remake:
 	make clear
 	make full
+
+run:
+	./cppsock_test
