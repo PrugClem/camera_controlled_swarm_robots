@@ -27,10 +27,9 @@ void LED_heartbeat(bool newstate)
     GPIO_WriteBit(GPIOC, GPIO_Pin_3, (newstate) ? Bit_SET : Bit_RESET);
 }
 
-void LED_triangle(bool newstate)
+void LED_triangle_l(bool led0, bool led1, bool led2)
 {
-    if(newstate)
-        GPIO_SetBits(GPIOC, GPIO_Pin_0 | GPIO_Pin_1 | GPIO_Pin_2);
-    else
-        GPIO_ResetBits(GPIOC, GPIO_Pin_0 | GPIO_Pin_1 | GPIO_Pin_2);
+    GPIO_WriteBit(GPIOC, GPIO_Pin_0, (led0) ? Bit_SET : Bit_RESET);
+    GPIO_WriteBit(GPIOC, GPIO_Pin_1, (led1) ? Bit_SET : Bit_RESET);
+    GPIO_WriteBit(GPIOC, GPIO_Pin_2, (led2) ? Bit_SET : Bit_RESET);
 }

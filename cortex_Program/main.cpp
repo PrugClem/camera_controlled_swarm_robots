@@ -4,7 +4,9 @@
 
 // main thread
 __NO_RETURN void main_thread_func(void *arg);
+__NO_RETURN void LED_heartbeat(void *arg);
 osThreadId_t main_thread_handle;
+osThreadId_t heartbeat_thread_handle;
 
 // main
 int main(void)
@@ -16,12 +18,28 @@ int main(void)
         tar.init(USART1, USART_BAUD_9600);
         motor_init();
         LED_init();
-        LED_heartbeat(true);
-        LED_triangle(true);
+
+        LED_triangle_l(true, false, false);osDelay(1000);
+        LED_triangle_l(false, true, false);osDelay(1000);
+        LED_triangle_l(false, false, true);osDelay(1000);
+        LED_triangle_l(true, true, true);
+
         main_thread_handle = osThreadNew(main_thread_func, &tar, NULL);
+        heartbeat_thread_handle = osThreadNew(LED_heartbeat, NULL, NULL);
         osKernelStart();
     }
     for(;;); // This code is only reached in an error
+}
+
+void LED_heartbeat(void *arg)
+{
+    for(;;)
+    {
+        LED_heartbeat(true);
+        osDelay(500);
+        LED_heartbeat(false);
+        osDelay(500);
+    }
 }
 
 // main thread function

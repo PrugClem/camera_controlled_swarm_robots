@@ -14,7 +14,7 @@ void LED_init(void);
 
 void LED_heartbeat(bool newstate);
 
-void LED_triangle(bool newstate);
+void LED_triangle_l(bool led0, bool led1, bool led2);
 
 #ifdef __cplusplus
 }
