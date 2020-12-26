@@ -10,6 +10,7 @@
 ".\objects\misc.o"
 ".\objects\stm32f10x_gpio.o"
 ".\objects\stm32f10x_rcc.o"
+".\objects\stm32f10x_tim.o"
 ".\objects\stm32f10x_usart.o"
 ".\objects\startup_stm32f10x_cl.o"
 ".\objects\system_stm32f10x.o"

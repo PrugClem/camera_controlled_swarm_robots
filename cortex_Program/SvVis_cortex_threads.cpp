@@ -9,18 +9,6 @@ uint8_t chid2len(uint8_t chid)
     return 0;
 }
 
-/*__NO_RETURN void usart_thread(void *arg)
-{
-    SvVis3_t *tar = (SvVis3_t*) arg;
-    char input;
-    for(;;)
-    {
-        while(USART_GetFlagStatus(tar->port, USART_FLAG_RXNE) == RESET) {osThreadYield();} // wait for character
-        input = USART_ReceiveData(tar->port);
-        osMessageQueuePut(tar->queue_usart, &input, nullptr, osWaitForever);
-    }
-}*/
-
 extern "C" void USART1_IRQHandler(void)
 {
     char input;
@@ -37,6 +25,8 @@ extern "C" void USART2_IRQHandler(void)
     return;
 }
 
+// ===================================================================================================================================
+// TODO: rewrite this function to handle WLAN module protocol
 extern "C" void USART3_IRQHandler(void)
 {
     char input;

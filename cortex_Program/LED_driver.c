@@ -1,5 +1,17 @@
 #include "LED_driver.h"
 
+__NO_RETURN void __LED_heartbeat_function(void *arg)
+{
+    for(;;)
+    {
+        LED_heartbeat(true);
+        osDelay(250);
+        LED_heartbeat(false);
+        osDelay(250);
+    }
+}
+osThreadId_t __LED_heartbeat_handle;
+
 void LED_init(void)
 {
     GPIO_InitTypeDef gpio;
@@ -20,6 +32,8 @@ void LED_init(void)
     //set PC0 as output for Heartbeat LED
     gpio.GPIO_Pin = GPIO_Pin_3;
     GPIO_Init(GPIOC, &gpio);
+
+    __LED_heartbeat_handle = osThreadNew(__LED_heartbeat_function, NULL, NULL);
 }
 
 void LED_heartbeat(bool newstate)

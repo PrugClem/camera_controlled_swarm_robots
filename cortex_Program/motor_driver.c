@@ -1,22 +1,55 @@
 #include "motor_driver.h"
 
-const uint32_t CYCLE_PERIOD = 10;
-double DUTY_CYCLE = 1.0;
-bool running = false;
+double duty_cycle_left = 0.1, duty_cycle_right = 0.1;
 
-__NO_RETURN void generate_pwm(void *arg)
+void TIM3_IRQHandler(void)
 {
-    while (true)
-    {
-        uint32_t on_time = CYCLE_PERIOD * DUTY_CYCLE;
-        uint32_t off_time = CYCLE_PERIOD - on_time;
-        if(running)
-            GPIO_SetBits(GPIOA, GPIO_Pin_4);
-        osDelay(on_time);
-        GPIO_ResetBits(GPIOA, GPIO_Pin_4);
-        osDelay(off_time);
-    }
-    
+    TIM_ClearITPendingBit(TIM3, TIM_IT_Update);
+}
+
+void timer_init(void)
+{
+    /**
+     *  TIM3 CH3 (PB0): output PWM for motor enable for LEFT  motor
+     *  TIM3 CH4 (PB1): output PWM for motor enable for RIGHT motor
+     */
+    TIM_TimeBaseInitTypeDef timer;
+    TIM_OCInitTypeDef outputcompare;
+    GPIO_InitTypeDef gpio;
+
+    // set PB0, PB1 as output for motor enable signals
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE); // enable clock for gpiob
+    gpio.GPIO_Mode = GPIO_Mode_AF_PP; // Alternate function output (Output compare output)
+    gpio.GPIO_Speed = GPIO_Speed_50MHz;
+    gpio.GPIO_Pin = GPIO_Pin_0; // PB0
+    GPIO_Init(GPIOB, &gpio);
+    gpio.GPIO_Pin = GPIO_Pin_1; // PB1
+    GPIO_Init(GPIOB, &gpio);
+
+    RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3, ENABLE); // enable clock for timer
+    timer.TIM_RepetitionCounter = 0; // infinite repetition
+    timer.TIM_CounterMode = TIM_CounterMode_Up; // count upwards
+    timer.TIM_ClockDivision = TIM_CKD_DIV1; // no clock division
+    timer.TIM_Prescaler = 128; // prescaler
+    timer.TIM_Period = 4096; // autoreload
+    TIM_TimeBaseInit(TIM3, &timer);
+
+    outputcompare.TIM_OCMode = TIM_OCMode_PWM1;
+    outputcompare.TIM_OCIdleState = TIM_OCIdleState_Reset;
+    outputcompare.TIM_OCNIdleState = TIM_OCNIdleState_Reset;
+    outputcompare.TIM_OCNPolarity = TIM_OCNPolarity_High;
+    outputcompare.TIM_OCPolarity = TIM_OCPolarity_High;
+    outputcompare.TIM_OutputNState = TIM_OutputNState_Disable;
+    outputcompare.TIM_OutputState = TIM_OutputState_Enable;
+    outputcompare.TIM_Pulse = timer.TIM_Period * duty_cycle_left;
+    TIM_OC3Init(TIM3, &outputcompare);
+    TIM_ITConfig(TIM3, TIM_IT_CC3, ENABLE);
+
+    outputcompare.TIM_Pulse = timer.TIM_Period * duty_cycle_right;
+    TIM_OC4Init(TIM3, &outputcompare);
+    TIM_ITConfig(TIM3, TIM_IT_CC4, ENABLE);
+
+    TIM_Cmd(TIM3, ENABLE);
 }
 
 void motor_init(void)
@@ -26,10 +59,6 @@ void motor_init(void)
     gpio.GPIO_Speed = GPIO_Speed_50MHz;
     //enable GPIOA
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
-
-    //set PA4 as output for enable signal
-    gpio.GPIO_Pin = GPIO_Pin_4;
-    GPIO_Init(GPIOA, &gpio);
 
     // set PA0,PA1, PA6,PA7 as output for motor control signals
     gpio.GPIO_Pin = GPIO_Pin_0;
@@ -41,10 +70,15 @@ void motor_init(void)
     gpio.GPIO_Pin = GPIO_Pin_7;
     GPIO_Init(GPIOA, &gpio);
 
-    osThreadNew(generate_pwm, NULL, NULL);
+    //set PA4 as input floating because high impedance because hardware
+    gpio.GPIO_Mode = GPIO_Mode_IN_FLOATING;
+    gpio.GPIO_Pin = GPIO_Pin_4;
+    GPIO_Init(GPIOA, &gpio);
+
+    timer_init();
 }
 
-void motor_cmd_str(const char* cmd)
+bool motor_cmd_str(const char* cmd)
 {
     if( strcmp(cmd, "stop") == 0 )
     {
@@ -69,45 +103,44 @@ void motor_cmd_str(const char* cmd)
     else // unrecognized command, stopping
     {
         motor_cmd_bin(MOTOR_CMD_STOP);
+        return false; // return false if an unknown command was used
     }
+    return true; // return true if a valid command was received
 }
 
-void motor_cmd_bin(motor_cmd_bin_t cmd)
+bool motor_cmd_bin(motor_cmd_bin_t cmd)
 {
     switch (cmd)
     {
     case MOTOR_CMD_STOP:
         // Disable Motor enable Signal
-        running = false;
         GPIO_ResetBits(GPIOA, GPIO_Pin_0 | GPIO_Pin_1 | GPIO_Pin_6 | GPIO_Pin_7);
         break;
     case MOTOR_CMD_FW:
         // Enable Motor enable Signal
-        running = true;
         GPIO_SetBits(GPIOA, GPIO_Pin_0 | GPIO_Pin_6);
         GPIO_ResetBits(GPIOA, GPIO_Pin_1 | GPIO_Pin_7);
         break;
     case MOTOR_CMD_BW:
         // Enable Motor enable Signal
-        running = true;
         GPIO_SetBits(GPIOA, GPIO_Pin_1 | GPIO_Pin_7);
         GPIO_ResetBits(GPIOA, GPIO_Pin_0 | GPIO_Pin_6);
         break;
     case MOTOR_CMD_RR:
         // Enable Motor enable Signal
-        running = true;
         GPIO_SetBits(GPIOA, GPIO_Pin_1 | GPIO_Pin_6);
         GPIO_ResetBits(GPIOA, GPIO_Pin_0 | GPIO_Pin_7);
         break;
     case MOTOR_CMD_RL:
         // Enable Motor enable Signal
-        running = true;
         GPIO_SetBits(GPIOA, GPIO_Pin_0 | GPIO_Pin_7);
         GPIO_ResetBits(GPIOA, GPIO_Pin_1 | GPIO_Pin_6);
+        break;
 
     default: // unrecognized command, stopping
         GPIO_ResetBits(GPIOA, GPIO_Pin_4);
         GPIO_ResetBits(GPIOA, GPIO_Pin_0 | GPIO_Pin_1 | GPIO_Pin_6 | GPIO_Pin_7);
-        break;
+        return false; // return false if an unrecognized command was used
     }
+    return true; // return true if a valid command was used
 }

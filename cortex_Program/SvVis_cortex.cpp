@@ -28,8 +28,6 @@ void init_usart(USART_TypeDef *usartn, uint32_t baud)
 
         nvic.NVIC_IRQChannel = USART1_IRQn;
         nvic.NVIC_IRQChannelCmd = ENABLE;
-
-        //USART_ITConfig(USART1, USART_IT_RXNE, ENABLE);
     }
     else if(usartn == USART2)
     {
@@ -43,8 +41,6 @@ void init_usart(USART_TypeDef *usartn, uint32_t baud)
 
         nvic.NVIC_IRQChannel = USART2_IRQn;
         nvic.NVIC_IRQChannelCmd = ENABLE;
-
-        //USART_ITConfig(USART2, USART_IT_RXNE, ENABLE);
     }
     else if(usartn == USART3)
     {
@@ -59,7 +55,8 @@ void init_usart(USART_TypeDef *usartn, uint32_t baud)
         nvic.NVIC_IRQChannel = USART3_IRQn;
         nvic.NVIC_IRQChannelCmd = ENABLE;
 
-        //USART_ITConfig(USART3, USART_IT_RXNE, ENABLE);
+        // ========================================================================================================================================================
+        // TODO: Add WLAN module initialisation
     }
     else
     {
@@ -86,13 +83,16 @@ void init_usart(USART_TypeDef *usartn, uint32_t baud)
 	USART_Init(usartn, &usart);
     NVIC_Init(&nvic);
 
-    if(usartn == USART1)      USART_ITConfig(USART1, USART_IT_RXNE, ENABLE);
+    /*if(usartn == USART1)      USART_ITConfig(USART1, USART_IT_RXNE, ENABLE);
     else if(usartn == USART2) USART_ITConfig(USART2, USART_IT_RXNE, ENABLE);
-    else if(usartn == USART3) USART_ITConfig(USART3, USART_IT_RXNE, ENABLE);
+    else if(usartn == USART3) USART_ITConfig(USART3, USART_IT_RXNE, ENABLE);*/
+    USART_ITConfig(usartn, USART_IT_RXNE, ENABLE);
 
 	USART_Cmd(usartn, ENABLE);
 }
 
+// ==================================================================================================================================================
+// TODO: rewrite these 2 functions to handle WLAN module protocol
 void USART_send_bytes(USART_TypeDef* port, void *start, size_t len)
 {
     for(size_t i=0; i<len; i++)

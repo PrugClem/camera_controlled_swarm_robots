@@ -3,9 +3,13 @@
 
 #include "stm32f10x_gpio.h"
 #include "stm32f10x_rcc.h"
+#include "stm32f10x_tim.h"
 #include "cmsis_os2.h"
+#include "misc.h"
+
 #include <stdbool.h>
 #include <string.h>
+#include <math.h>
 
 #ifdef __cplusplus
 extern "C"
@@ -15,8 +19,8 @@ extern "C"
 typedef uint8_t motor_cmd_bin_t;
 
 void motor_init(void);
-void motor_cmd_str(const char* cmd);
-void motor_cmd_bin(motor_cmd_bin_t cmd);
+bool motor_cmd_str(const char* cmd);
+bool motor_cmd_bin(motor_cmd_bin_t cmd);
 
 #define MOTOR_CMD_STOP ((motor_cmd_bin_t) 0)
 #define MOTOR_CMD_FW   ((motor_cmd_bin_t) 1)
