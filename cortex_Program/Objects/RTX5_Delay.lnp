@@ -4,6 +4,7 @@
 ".\objects\svvis_cortex_threads.o"
 ".\objects\led_driver.o"
 ".\objects\motor_driver.o"
+".\objects\usart_driver.o"
 "C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.1\CMSIS\RTOS2\RTX\Library\ARM\RTX_CM3.lib"
 ".\objects\rtx_lib.o"
 ".\objects\rtx_config.o"

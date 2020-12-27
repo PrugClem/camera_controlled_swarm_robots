@@ -1,6 +1,6 @@
 #include "motor_driver.h"
 
-double duty_cycle_left = 0.1, duty_cycle_right = 0.1;
+double duty_cycle_left = 0.05, duty_cycle_right = 0.05;
 
 void TIM3_IRQHandler(void)
 {
@@ -30,7 +30,7 @@ void timer_init(void)
     timer.TIM_RepetitionCounter = 0; // infinite repetition
     timer.TIM_CounterMode = TIM_CounterMode_Up; // count upwards
     timer.TIM_ClockDivision = TIM_CKD_DIV1; // no clock division
-    timer.TIM_Prescaler = 128; // prescaler
+    timer.TIM_Prescaler = 256; // prescaler
     timer.TIM_Period = 4096; // autoreload
     TIM_TimeBaseInit(TIM3, &timer);
 

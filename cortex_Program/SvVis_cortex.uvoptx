@@ -150,18 +150,34 @@
         <Bp>
           <Number>0</Number>
           <Type>0</Type>
-          <LineNumber>84</LineNumber>
+          <LineNumber>25</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134229830</Address>
+          <Address>134230634</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
           <SizeOfObject>0</SizeOfObject>
           <BreakByAccess>0</BreakByAccess>
           <BreakIfRCount>1</BreakIfRCount>
-          <Filename>D:\Daten\Clemens\Schule\_DA\dev\ELLFI_Program\motor_driver.cpp</Filename>
+          <Filename>.\SvVis_cortex.cpp</Filename>
           <ExecCommand></ExecCommand>
-          <Expression>\\RTX5_Delay\motor_driver.cpp\84</Expression>
+          <Expression>\\RTX5_Delay\SvVis_cortex.cpp\25</Expression>
+        </Bp>
+        <Bp>
+          <Number>1</Number>
+          <Type>0</Type>
+          <LineNumber>11</LineNumber>
+          <EnabledFlag>1</EnabledFlag>
+          <Address>134231360</Address>
+          <ByteObject>0</ByteObject>
+          <HtxType>0</HtxType>
+          <ManyObjects>0</ManyObjects>
+          <SizeOfObject>0</SizeOfObject>
+          <BreakByAccess>0</BreakByAccess>
+          <BreakIfRCount>1</BreakIfRCount>
+          <Filename>.\main.cpp</Filename>
+          <ExecCommand></ExecCommand>
+          <Expression>\\RTX5_Delay\main.cpp\11</Expression>
         </Bp>
       </Breakpoint>
       <WatchWindow1>
@@ -290,6 +306,18 @@
       <bDave2>0</bDave2>
       <PathWithFileName>.\motor_driver.c</PathWithFileName>
       <FilenameWithoutPath>motor_driver.c</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>1</GroupNumber>
+      <FileNumber>6</FileNumber>
+      <FileType>8</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>.\USART_driver.cpp</PathWithFileName>
+      <FilenameWithoutPath>USART_driver.cpp</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>

@@ -5,6 +5,7 @@
 
 #include "config.hpp"
 #include <string.h>
+#include <cstdlib>
 
 #include "misc.h"
 #include "cmsis_os2.h"
@@ -12,20 +13,22 @@
 #include "stm32f10x_gpio.h"
 #include "stm32f10x_usart.h"
 
+#include "USART_driver.hpp"
+
 #define nullptr NULL
 
-struct SvVis3_message_t
+struct SvVis_message_t
 {
-    SvVis3_channel_t channel;
+    SvVis_channel_t channel;
     int8_t len;
     union data
     {
         int16_t i16;
         int32_t i32;
         float f;
-        char raw[SvVIS3_DATA_MAX_LEN];
+        char raw[SvVIS_DATA_MAX_LEN];
     } data;
-    bool is_string() {return this->channel == SvVIS3_STRING_CHANNEL;}
+    bool is_string() {return this->channel == SvVIS_STRING_CHANNEL;}
 };
 
 struct SvVis3_data_t
@@ -36,11 +39,11 @@ struct SvVis3_data_t
         int32_t i32;
         float f;
     };
-    SvVis3_data_tuple_t ch[SvVis3_CHANNEL_COUNT];
-    void apply_msg(SvVis3_message_t &msg);
+    SvVis3_data_tuple_t ch[SvVis_CHANNEL_COUNT];
+    void apply_msg(SvVis_message_t &msg);
 };
 
-class SvVis3_t
+class SvVis_t
 {
 public:
     USART_TypeDef *port;
@@ -48,21 +51,19 @@ public:
     osThreadId_t thread_recv, thread_send;
     osMessageQueueId_t queue_usart, queue_recv, queue_send;
     
-    void init(USART_TypeDef *port, uint32_t baud);
+    bool init(USART_TypeDef *port, uint32_t baud);
 
-    void send_msg(SvVis3_message_t &msgbuf);
+    void send_msg(SvVis_message_t &msgbuf);
     void send_str(const char *str);
-    void send_i16(SvVis3_channel_t channel, int16_t data);
-    void send_i32(SvVis3_channel_t channel, int32_t data);
-    void send_float(SvVis3_channel_t channel, float data);
-    void recv_msg(SvVis3_message_t &msgbuf);
+    void send_i16(SvVis_channel_t channel, int16_t data);
+    void send_i32(SvVis_channel_t channel, int32_t data);
+    void send_float(SvVis_channel_t channel, float data);
+    uint32_t available();
+    void recv_msg(SvVis_message_t &msgbuf);
 };
 
-extern SvVis3_t *_usart1_handler, *_usart2_handler, *_usart3_handler;
+extern SvVis_t *_usart1_handler, *_usart2_handler, *_usart3_handler;
 
-void init_usart(USART_TypeDef *usartn, uint32_t baud);
-void USART_send_bytes(USART_TypeDef* port, void *start, size_t len);
-void USART_send_byte(USART_TypeDef* port, uint8_t byte);
 //__NO_RETURN void usart_thread(void *arg);
 __NO_RETURN void recv_thread(void *arg);
 __NO_RETURN void send_thread(void *arg);
