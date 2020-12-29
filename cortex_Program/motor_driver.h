@@ -8,6 +8,7 @@
 #include "misc.h"
 
 #include <stdbool.h>
+#include <stdlib.h>
 #include <string.h>
 #include <math.h>
 
@@ -20,7 +21,7 @@ typedef uint8_t motor_cmd_bin_t;
 
 void motor_init(void);
 bool motor_cmd_str(const char* cmd);
-bool motor_cmd_bin(motor_cmd_bin_t cmd);
+bool motor_cmd_bin(motor_cmd_bin_t cmd, uint32_t time);
 
 #define MOTOR_CMD_STOP ((motor_cmd_bin_t) 0)
 #define MOTOR_CMD_FW   ((motor_cmd_bin_t) 1)

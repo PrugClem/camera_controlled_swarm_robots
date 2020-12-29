@@ -30,8 +30,9 @@ void main_thread_func(void *arg)
     SvVis_message_t msg;
     SvVis_t *sender = nullptr;
 
-    LED_init();
-    motor_init();
+    motor_init();   // initialise motor driver
+    LED_init();     // initialise LED driver and start heartbeat thread
+    // if the system needs more memory, the heartbeat LED will not turn on
 
     // triangle LED test, only enable one led for 500ms then all at once
     LED_triangle_l(true, false, false);osDelay(500);
@@ -75,11 +76,16 @@ void main_thread_func(void *arg)
             {
                 // short help page
                 sender->send_str("Supported Commands:");
-                sender->send_str("stop Stop");
-                sender->send_str("fw   Move Forard");
-                sender->send_str("bw   Move Backwards");
-                sender->send_str("rr   Rotate Right");
-                sender->send_str("rl   Rotate Left");
+                sender->send_str("stop   Stop");
+                sender->send_str("fw <t> Move Forard");
+                sender->send_str("bw <t> Move Backwards");
+                sender->send_str("rr <t> Rotate Right");
+                sender->send_str("rl <t> Rotate Left");
+                sender->send_str("");
+                sender->send_str("<t> indicates that it is");
+                sender->send_str(" possible to run a command for");
+                sender->send_str(" a limited time only");
+                sender->send_str("");
             }
             else if(!motor_cmd_str(msg.data.raw))
             {

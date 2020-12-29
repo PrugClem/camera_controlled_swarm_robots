@@ -1,10 +1,16 @@
 #include "motor_driver.h"
 
 double duty_cycle_left = 0.05, duty_cycle_right = 0.05;
+osTimerId_t os_timer_stop;
 
 void TIM3_IRQHandler(void)
 {
     TIM_ClearITPendingBit(TIM3, TIM_IT_Update);
+}
+
+void motor_stop(void*arg)
+{
+    GPIO_ResetBits(GPIOA, GPIO_Pin_0 | GPIO_Pin_1 | GPIO_Pin_6 | GPIO_Pin_7);
 }
 
 void timer_init(void)
@@ -76,45 +82,55 @@ void motor_init(void)
     GPIO_Init(GPIOA, &gpio);
 
     timer_init();
+
+    os_timer_stop = osTimerNew(motor_stop, osTimerOnce, NULL, NULL);
 }
 
 bool motor_cmd_str(const char* cmd)
 {
-    if( strcmp(cmd, "stop") == 0 )
+    uint32_t time = osWaitForever;
+    // after the end of the string, the buffer is consistently filled with zeros thanks to memset() in recv_thread() in SvVis_cortex_threads.cpp
+    if( strncmp(cmd, "stop", 4) == 0 )
     {
-        motor_cmd_bin(MOTOR_CMD_STOP);
+        time = strtoul(cmd+5, NULL, 0); // "stop %d"
+        motor_cmd_bin(MOTOR_CMD_STOP, time);
     }
-    else if( strcmp(cmd, "fw") == 0 )
+    else if( strncmp(cmd, "fw", 2) == 0 )
     {
-        motor_cmd_bin(MOTOR_CMD_FW);
+        time = strtoul(cmd+3, NULL, 0); // "fw %d"
+        motor_cmd_bin(MOTOR_CMD_FW, time);
     }
-    else if( strcmp(cmd, "bw") == 0 )
+    else if( strncmp(cmd, "bw", 2) == 0 )
     {
-        motor_cmd_bin(MOTOR_CMD_BW);
+        time = strtoul(cmd+3, NULL, 0); // "bw %d"
+        motor_cmd_bin(MOTOR_CMD_BW, time);
     }
-    else if( strcmp(cmd, "rr") == 0 )
+    else if( strncmp(cmd, "rr", 2) == 0 )
     {
-        motor_cmd_bin(MOTOR_CMD_RR);
+        time = strtoul(cmd+3, NULL, 0); // "rr %d"
+        motor_cmd_bin(MOTOR_CMD_RR, time);
     }
-    else if( strcmp(cmd, "rl") == 0 )
+    else if( strncmp(cmd, "rl", 2) == 0 )
     {
-        motor_cmd_bin(MOTOR_CMD_RL);
+        time = strtoul(cmd+3, NULL, 0); // "rl %d"
+        motor_cmd_bin(MOTOR_CMD_RL, time);
     }
     else // unrecognized command, stopping
     {
-        motor_cmd_bin(MOTOR_CMD_STOP);
+        motor_cmd_bin(MOTOR_CMD_STOP, osWaitForever);
         return false; // return false if an unknown command was used
     }
     return true; // return true if a valid command was received
 }
 
-bool motor_cmd_bin(motor_cmd_bin_t cmd)
+bool motor_cmd_bin(motor_cmd_bin_t cmd, uint32_t time)
 {
     switch (cmd)
     {
     case MOTOR_CMD_STOP:
         // Disable Motor enable Signal
-        GPIO_ResetBits(GPIOA, GPIO_Pin_0 | GPIO_Pin_1 | GPIO_Pin_6 | GPIO_Pin_7);
+        //GPIO_ResetBits(GPIOA, GPIO_Pin_0 | GPIO_Pin_1 | GPIO_Pin_6 | GPIO_Pin_7);
+        motor_stop(NULL);
         break;
     case MOTOR_CMD_FW:
         // Enable Motor enable Signal
@@ -138,9 +154,10 @@ bool motor_cmd_bin(motor_cmd_bin_t cmd)
         break;
 
     default: // unrecognized command, stopping
-        GPIO_ResetBits(GPIOA, GPIO_Pin_4);
-        GPIO_ResetBits(GPIOA, GPIO_Pin_0 | GPIO_Pin_1 | GPIO_Pin_6 | GPIO_Pin_7);
+        //GPIO_ResetBits(GPIOA, GPIO_Pin_0 | GPIO_Pin_1 | GPIO_Pin_6 | GPIO_Pin_7);
+        motor_stop(NULL);
         return false; // return false if an unrecognized command was used
     }
+    osTimerStart(os_timer_stop, time);
     return true; // return true if a valid command was used
 }

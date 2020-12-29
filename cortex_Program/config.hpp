@@ -4,7 +4,7 @@
 #include <stdint.h>
 
 #define SvVIS_DATA_MAX_LEN 32
-#define SvVis_USART_BACKLOG 16
+#define SvVis_USART_BACKLOG 4
 #define SvVIS_RECV_BACKLOG 2
 #define SvVIS_SEND_BACKLOG 2
 

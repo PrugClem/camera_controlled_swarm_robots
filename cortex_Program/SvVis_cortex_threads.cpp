@@ -22,6 +22,8 @@ __NO_RETURN void recv_thread(void *arg)
         osMessageQueueGet(tar->queue_usart, &recvbuf, nullptr, osWaitForever);
         msgbuf.channel = recvbuf;
         maxlen = chid2len(msgbuf.channel);
+        // initialise data with zeros
+        memset(&msgbuf.data, 0, sizeof(msgbuf.data));
         // get data
         if(msgbuf.channel != SvVIS_STRING_CHANNEL)
         {
@@ -38,10 +40,9 @@ __NO_RETURN void recv_thread(void *arg)
             {
                 osMessageQueueGet(tar->queue_usart, &recvbuf, nullptr, osWaitForever);
                 // push back received character
-                if(msgbuf.len < SvVIS_DATA_MAX_LEN) {msgbuf.data.raw[msgbuf.len++] = recvbuf;} // write character from input data
-                //{msgbuf.data.raw[SvVIS3_DATA_MAX_LEN-1] = 0;} // write 0 at the end of the string
+                if(msgbuf.len < SvVIS_DATA_MAX_LEN-1) {msgbuf.data.raw[msgbuf.len++] = recvbuf;} // write character from input data
             }
-            msgbuf.data.raw[SvVIS_DATA_MAX_LEN-1] = 0; // set ending character to 0
+            //msgbuf.data.raw[SvVIS_DATA_MAX_LEN-1] ='\0';
         }
         osMessageQueuePut(tar->queue_recv, &msgbuf, nullptr, osWaitForever);
     }
