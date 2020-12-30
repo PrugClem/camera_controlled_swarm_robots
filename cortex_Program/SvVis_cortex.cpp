@@ -87,7 +87,7 @@ void SvVis_t::recv_msg(SvVis_message_t &msg_buf)
     osMessageQueueGet(this->queue_recv, &msg_buf, NULL, osWaitForever);
 }
 
-void SvVis3_data_t::apply_msg(SvVis_message_t &msg)
+void SvVis_data_t::apply_msg(SvVis_message_t &msg)
 {
     if( (msg.channel >= SvVIS_I16_CHANNEL_BASE) && (msg.channel < SvVIS_I16_CHANNEL_BASE + SvVis_CHANNEL_COUNT) ) // 11..19
     {

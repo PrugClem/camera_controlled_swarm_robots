@@ -6,18 +6,26 @@
 __NO_RETURN void main_thread_func(void *arg);
 osThreadId_t main_thread_handle;
 
+struct SvVis_collection
+{
+    SvVis_t daplink;
+    SvVis_t bluetooth;
+    SvVis_t wlan;
+};
+
+
 // main
 int main(void)
 {
-    SvVis_t tar[3];
+    SvVis_collection tar;
     SystemCoreClockUpdate();
     if(osKernelInitialize() == osOK)
     {
-        tar[0].init(USART1, USART_BAUD_9600); // initialise DAP USART
-        tar[1].init(USART2, USART_BAUD_9600); // initialise Bluetooth USART
-        tar[2].init(USART3, USART_BAUD_9600); // initialise WLAN USART
+        tar.daplink.init(USART1, USART_BAUD_9600); // initialise DAP USART
+        tar.bluetooth.init(USART2, USART_BAUD_9600); // initialise Bluetooth USART
+        tar.wlan.init(USART3, USART_BAUD_9600); // initialise WLAN USART
 
-        main_thread_handle = osThreadNew(main_thread_func, tar, NULL);
+        main_thread_handle = osThreadNew(main_thread_func, &tar, NULL);
         osKernelStart();
     }
     for(;;); // This code is only reached in an error
@@ -26,7 +34,7 @@ int main(void)
 // main thread function
 void main_thread_func(void *arg)
 {
-    SvVis_t *tar = (SvVis_t*)arg;
+    SvVis_collection *tar = (SvVis_collection*)arg;
     SvVis_message_t msg;
     SvVis_t *sender = nullptr;
 
@@ -46,17 +54,17 @@ void main_thread_func(void *arg)
         // if the pointer is a nullptr, no instance has a message to receive
         // because of else if instead of regular if's the first instance gets priority
         sender = nullptr;
-        if (tar[0].available() > 0)
+        if (tar->daplink.available() > 0)
         {
-            sender = &tar[0];
+            sender = &tar->daplink;
         }
-        else if (tar[1].available() > 0)
+        else if (tar->bluetooth.available() > 0)
         {
-            sender = &tar[1];
+            sender = &tar->bluetooth;
         }
-        else if (tar[2].available() > 0)
+        else if (tar->wlan.available() > 0)
         {
-            sender = &tar[2];
+            sender = &tar->wlan;
         }
 
         if(sender == nullptr)
@@ -81,11 +89,11 @@ void main_thread_func(void *arg)
                 sender->send_str("bw <t> Move Backwards");
                 sender->send_str("rr <t> Rotate Right");
                 sender->send_str("rl <t> Rotate Left");
-                sender->send_str("");
+                sender->send_str(" ");
                 sender->send_str("<t> indicates that it is");
                 sender->send_str(" possible to run a command for");
                 sender->send_str(" a limited time only");
-                sender->send_str("");
+                sender->send_str(" ");
             }
             else if(!motor_cmd_str(msg.data.raw))
             {

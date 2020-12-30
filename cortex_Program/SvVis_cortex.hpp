@@ -31,7 +31,7 @@ struct SvVis_message_t
     bool is_string() {return this->channel == SvVIS_STRING_CHANNEL;}
 };
 
-struct SvVis3_data_t
+struct SvVis_data_t
 {
     struct SvVis3_data_tuple_t
     {
