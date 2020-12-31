@@ -1,11 +1,26 @@
+/**
+ *  this file handles basic USART interactions and provides message queues to get raw USART data
+ *  The queues are !NOT! initialised in this file, they are initialised in the file "SvVis_cortex.cpp"
+ *  This file initialises the Port lines with the correct IO settings and enables the Interrupt service routines to store received data in the queue
+ *  Communication without overhead like the HC06 module or the DAPlink adapter can read data directly from these queues
+ * 
+ *  The SvVis class is responsible for initialising the USART driver
+ */
+
 #include "USART_driver.hpp"
 #include "SvVis_cortex.hpp" // for using the SvVis queues
+
+/**
+ *  The usart queues are ALWAYS the raw data, whereas the WLAN queue is the queue for decoded received WLAN data
+ */
+osMessageQueueId_t queue_usart1, queue_usart2, queue_usart3;
+osMessageQueueId_t queue_wlan;
 
 extern "C" void USART1_IRQHandler(void)
 {
     char input;
     input = USART_ReceiveData(USART1);
-    osMessageQueuePut(_usart1_handler->queue_usart, &input, nullptr, 0);
+    osMessageQueuePut(queue_usart1, &input, nullptr, 0);
     return;
 }
 
@@ -13,23 +28,19 @@ extern "C" void USART2_IRQHandler(void)
 {
     char input;
     input = USART_ReceiveData(USART2);
-    osMessageQueuePut(_usart2_handler->queue_usart, &input, nullptr, 0);
+    osMessageQueuePut(queue_usart2, &input, nullptr, 0);
     return;
 }
 
-// ===================================================================================================================================
-// TODO: rewrite this function to handle WLAN module protocol
 extern "C" void USART3_IRQHandler(void)
 {
     char input;
     input = USART_ReceiveData(USART3);
-    osMessageQueuePut(_usart3_handler->queue_usart, &input, nullptr, 0);
+    osMessageQueuePut(queue_usart3, &input, nullptr, 0);
     return;
 }
 
-// ==================================================================================================================================================
-// TODO: rewrite these 2 functions to handle WLAN module protocol
-void USART_send_bytes(USART_TypeDef* port, void *start, size_t len)
+void USART_send_bytes(USART_TypeDef* port, const void *start, size_t len)
 {
     for(size_t i=0; i<len; i++)
         USART_send_byte(port, ((char*)start)[i] );
@@ -93,9 +104,6 @@ void init_usart(USART_TypeDef *usartn, uint32_t baud)
 
         nvic.NVIC_IRQChannel = USART3_IRQn;
         nvic.NVIC_IRQChannelCmd = ENABLE;
-
-        // ========================================================================================================================================================
-        // TODO: Add WLAN module initialisation
     }
     else
     {

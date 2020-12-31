@@ -15,8 +15,11 @@
 
 #include "USART_driver.hpp"
 
+#ifndef nullptr
 #define nullptr NULL
+#endif // nullptr
 
+typedef uint8_t SvVis_channel_t;
 struct SvVis_message_t
 {
     SvVis_channel_t channel;

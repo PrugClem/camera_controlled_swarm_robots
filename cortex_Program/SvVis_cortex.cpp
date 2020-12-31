@@ -1,34 +1,55 @@
+/**
+ *  This file handles the SvVis communication protocol together with "SvVis_cortex_threads"
+ *  To receive raw data, the message queues provided by the USART and WLAN driver are used
+ *  message queues are used to be able to process a different data source which uses some overhead (WLAN)
+ *  The class uses message queues to send / receive data which are continusly processed by the thread functions in "SvVis_cortex_threads.cpp"
+ * 
+ *  This class is responsible for initialising the underlying drivers for the communication
+ */
+
 #include "SvVis_cortex.hpp"
 
+/**
+ *  Only one instance should control a USART port, these pointers can also be used as global reference to a specific port
+ */
 SvVis_t *_usart1_handler = nullptr, *_usart2_handler = nullptr, *_usart3_handler = nullptr;
 
 bool SvVis_t::init(USART_TypeDef *port, uint32_t baud)
 {
-    init_usart(port, baud);
-    this->port = port;
     if(port == USART1)
     {
         if(_usart1_handler != nullptr) return false;
         _usart1_handler = this;
+        // for usart1 (daplink), no overhead is used, so the raw usart queue can be used
+        this->queue_usart = queue_usart1 = osMessageQueueNew(SvVIS_USART_BACKLOG, sizeof(char), nullptr);
     }
     else if(port == USART2)
     {
         if(_usart2_handler != nullptr) return false;
         _usart2_handler = this;
+        //for usart2 (bluetooth HC06), no overhead is used, so the raw usart queue can be used
+        this->queue_usart = queue_usart2 = osMessageQueueNew(SvVIS_USART_BACKLOG, sizeof(char), nullptr);
     }
     else if(port == USART3)
     {
         if(_usart3_handler != nullptr) return false;
         _usart3_handler = this;
+        // queue_usart3 contains the raw communication with the WLAN module (with overhead), a eperate queue for processed data is used instead
+        this->queue_usart = queue_wlan = osMessageQueueNew(SvVIS_WLAN_BACKLOG, sizeof(char), nullptr);
+        init_wlan(); // initialise WLAN after initialising the message queue
     }
+    else
+    {
+        return false;
+    }
+    init_usart(port, baud); // initialise USART and USART interrupts
+    this->port = port;
+    
+    this->queue_send  = osMessageQueueNew(SvVIS_SEND_BACKLOG, sizeof(SvVis_message_t), nullptr); // message queue for messages to be sent
+    this->queue_recv  = osMessageQueueNew(SvVIS_RECV_BACKLOG, sizeof(SvVis_message_t), nullptr); // message queue for messages to receive
 
-    this->queue_send  = osMessageQueueNew(SvVIS_SEND_BACKLOG, sizeof(SvVis_message_t), nullptr);
-    this->queue_recv  = osMessageQueueNew(SvVIS_RECV_BACKLOG, sizeof(SvVis_message_t), nullptr);
-    this->queue_usart = osMessageQueueNew(SvVis_USART_BACKLOG, sizeof(char), nullptr);
-
-    //this->thread_usart = osThreadNew(usart_thread, this, nullptr);
-    this->thread_recv = osThreadNew(recv_thread, this, nullptr);
-    this->thread_send = osThreadNew(send_thread, this, nullptr);
+    this->thread_recv = osThreadNew(recv_thread, this, nullptr); // thread to receive raw bytes and decode into messages
+    this->thread_send = osThreadNew(send_thread, this, nullptr); // thread to send messages from queue
     return true;
 }
 
@@ -39,6 +60,7 @@ void SvVis_t::send_msg(SvVis_message_t &message)
 }
 void SvVis_t::send_str(const char *str)
 {
+    // prepares message for string and caps the string at the maximum length
     size_t len = strlen(str)+1;
 	bool too_long = (len >= SvVIS_DATA_MAX_LEN);
     if(too_long) {len = SvVIS_DATA_MAX_LEN;}
@@ -51,6 +73,7 @@ void SvVis_t::send_str(const char *str)
 }
 void SvVis_t::send_i16(SvVis_channel_t channel, int16_t data)
 {
+    // prepares message for int16_t
     size_t len = sizeof(data);
     SvVis_message_t message;
     message.channel = SvVIS_I16_CHANNEL_BASE + channel;
@@ -60,6 +83,7 @@ void SvVis_t::send_i16(SvVis_channel_t channel, int16_t data)
 }
 void SvVis_t::send_i32(SvVis_channel_t channel, int32_t data)
 {
+    // prepares message for int32_t, it is known that this function does not work with SvVis Form App for windows
     size_t len = sizeof(data);
     SvVis_message_t message;
     message.channel = SvVIS_I32_CHANNEL_BASE + channel;
@@ -69,6 +93,7 @@ void SvVis_t::send_i32(SvVis_channel_t channel, int32_t data)
 }
 void SvVis_t::send_float(SvVis_channel_t channel, float data)
 {
+    // prepares message for float
     size_t len = sizeof(data);
     SvVis_message_t message;
     message.channel = SvVIS_FLOAT_CHANNEL_BASE + channel;

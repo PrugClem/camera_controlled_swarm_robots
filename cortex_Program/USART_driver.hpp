@@ -13,8 +13,19 @@ extern "C"
 #endif // __cplusplus
 
 void init_usart(USART_TypeDef *usartn, uint32_t baud);
-void USART_send_bytes(USART_TypeDef* port, void *start, size_t len);
+void USART_send_bytes(USART_TypeDef* port, const void *start, size_t len);
 void USART_send_byte(USART_TypeDef* port, uint8_t byte);
+
+extern osMessageQueueId_t queue_usart1, queue_usart2, queue_usart3; // message queues for incoming bytes, usart3 contains raw data
+extern osMessageQueueId_t queue_wlan; // message queue for WLAN processed data
+
+void init_wlan();
+/// cmd does not include end of command sequence
+void _WLAN_run(const char *cmd);
+void WLAN_connect(const char *rem_ip, uint16_t rem_port);
+void WLAN_send_byte(uint8_t byte);
+void WLAN_send_bytes(void *start, size_t len);
+
 
 #ifdef __cplusplus
 }

@@ -22,28 +22,29 @@ Dialog DLL:      TCM.DLL V1.32.0.0
  
 <h2>Project:</h2>
 D:\Daten\Clemens\Schule\_DA\_github_repo\cortex_Program\SvVis_cortex.uvprojx
-Project File Date:  12/27/2020
+Project File Date:  12/30/2020
 
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 5 (build 528)', folder: 'C:\Keil_v5\ARM\ARMCC\Bin'
 Rebuild target 'ARM_Minalsystem'
-compiling RTX_Config.c...
 compiling rtx_lib.c...
-compiling LED_driver.c...
-compiling USART_driver.cpp...
+compiling RTX_Config.c...
 compiling misc.c...
-compiling SvVis_cortex_threads.cpp...
-compiling stm32f10x_gpio.c...
 compiling SvVis_cortex.cpp...
+compiling USART_driver.cpp...
+compiling SvVis_cortex_threads.cpp...
+compiling main.cpp...
+compiling LED_driver.c...
+compiling stm32f10x_gpio.c...
+compiling WLAN_driver.cpp...
 compiling motor_driver.c...
 assembling startup_stm32f10x_cl.s...
 compiling stm32f10x_rcc.c...
-compiling main.cpp...
 compiling stm32f10x_tim.c...
-compiling stm32f10x_usart.c...
 compiling system_stm32f10x.c...
+compiling stm32f10x_usart.c...
 linking...
-Program Size: Code=16256 RO-data=860 RW-data=5592 ZI-data=1632  
+Program Size: Code=16476 RO-data=860 RW-data=5616 ZI-data=6240  
 ".\Objects\RTX5_Delay.axf" - 0 Error(s), 0 Warning(s).
 
 <h2>Software Packages used:</h2>
@@ -88,46 +89,46 @@ Package Vendor: Keil
       Include file:  Device\StdPeriph_Driver\inc\stm32f10x_tim.h
 
    * Component: Keil::Device:StdPeriph Drivers:RCC:3.5.0
-      Include file:  Device\StdPeriph_Driver\inc\stm32f10x_rcc.h
       Source file:   Device\StdPeriph_Driver\src\stm32f10x_rcc.c
+      Include file:  Device\StdPeriph_Driver\inc\stm32f10x_rcc.h
 
    * Component: Keil::Device:StdPeriph Drivers:GPIO:3.5.0
-      Include file:  Device\StdPeriph_Driver\inc\stm32f10x_gpio.h
       Source file:   Device\StdPeriph_Driver\src\stm32f10x_gpio.c
+      Include file:  Device\StdPeriph_Driver\inc\stm32f10x_gpio.h
 
    * Component: Keil::Device:StdPeriph Drivers:Framework:3.5.1
       Include file:  Device\StdPeriph_Driver\inc\misc.h
       Source file:   Device\StdPeriph_Driver\src\misc.c
-      Source file:   Device\StdPeriph_Driver\templates\stm32f10x_conf.h
       Include file:  Device\StdPeriph_Driver\templates\stm32f10x_it.h
       Source file:   Device\StdPeriph_Driver\templates\stm32f10x_it.c
+      Source file:   Device\StdPeriph_Driver\templates\stm32f10x_conf.h
 
    * Component: Keil::Device:Startup:1.0.0
-      Source file:   Device\Source\ARM\startup_stm32f10x_cl.s
-      Source file:   Device\Source\ARM\STM32F1xx_OPT.s
       Include file:  RTE_Driver\Config\RTE_Device.h
+      Source file:   Device\Source\ARM\STM32F1xx_OPT.s
+      Source file:   Device\Source\ARM\startup_stm32f10x_cl.s
       Source file:   Device\Source\system_stm32f10x.c
 
    * Component: ARM::CMSIS:RTOS2:Keil RTX5:Library:5.1.0
       Include file:  CMSIS\RTOS2\RTX\Include\rtx_os.h
-      Include file:  CMSIS\RTOS2\RTX\Config\RTX_Config.h
       Source file:   CMSIS\RTOS2\RTX\Config\RTX_Config.c
-      Source file:   CMSIS\RTOS2\RTX\Template\MsgQueue.c
-      Library file:  CMSIS\RTOS2\RTX\Library\ARM\RTX_CM3.lib
-      Source file:   CMSIS\RTOS2\RTX\Template\MemPool.c
-      Source file:   CMSIS\RTOS2\RTX\Template\Timer.c
       Source file:   CMSIS\RTOS2\RTX\Template\main.c
+      Include file:  CMSIS\RTOS2\RTX\Config\RTX_Config.h
       Source file:   CMSIS\RTOS2\RTX\Template\Events.c
+      Source file:   CMSIS\RTOS2\RTX\Template\MemPool.c
+      Library file:  CMSIS\RTOS2\RTX\Library\ARM\RTX_CM3.lib
       Source file:   CMSIS\RTOS2\RTX\Source\rtx_lib.c
-      Source file:   CMSIS\RTOS2\RTX\Template\Mutex.c
       Source file:   CMSIS\RTOS2\RTX\Template\Semaphore.c
+      Source file:   CMSIS\RTOS2\RTX\Template\MsgQueue.c
       Source file:   CMSIS\RTOS2\RTX\Template\Thread.c
+      Source file:   CMSIS\RTOS2\RTX\Template\Timer.c
+      Source file:   CMSIS\RTOS2\RTX\Template\Mutex.c
 
    * Component: ARM::CMSIS:CORE:5.0.1
 
    * Component: ::CMSIS:RTOS2:2.1.0 (API)
       Include file:  CMSIS\RTOS2\Include\cmsis_os2.h
-Build Time Elapsed:  00:00:02
+Build Time Elapsed:  00:00:01
 </pre>
 </body>
 </html>

@@ -1,10 +1,15 @@
 #ifndef CONFIG_H_INCLUDED
 #define CONFIG_H_INCLUDED
 
+/**
+ *  This file contains several configuration constants
+ */
+
 #include <stdint.h>
 
 #define SvVIS_DATA_MAX_LEN 32
-#define SvVis_USART_BACKLOG 4
+#define SvVIS_USART_BACKLOG 4
+#define SvVIS_WLAN_BACKLOG 4
 #define SvVIS_RECV_BACKLOG 2
 #define SvVIS_SEND_BACKLOG 2
 
@@ -14,10 +19,8 @@
 #define SvVIS_STRING_CHANNEL 10
 #define SvVIS_FLOAT_CHANNEL_BASE 21
 
-#define USART_BAUD_9600 (9600 * 3) /* *3 becuase of some error I could not fix */
-#define USART_BAUD_115200 (115200 * 3) /* *3 becuase of some error I could not fix */
+#define USART_BAUD_9600 (9600 * 3) /* *3 becuase of some error with the hardware I could not fix */
+#define USART_BAUD_115200 (115200 * 3) /* *3 becuase of some error with the hardware I could not fix */
 #define USART_BAUD USART_BAUD_115200
-
-typedef uint8_t SvVis_channel_t;
 
 #endif // CONFIG_H_INCLUDED

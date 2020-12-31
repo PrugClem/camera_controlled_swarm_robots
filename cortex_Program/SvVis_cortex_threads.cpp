@@ -1,3 +1,8 @@
+/**
+ *  This file handles the continuusly running threads to decode / send data
+ *  Data is sent from a message queue and received data is put into a different message queue
+ */
+
 #include "SvVis_cortex.hpp"
 
 uint8_t chid2len(uint8_t chid)
@@ -54,7 +59,15 @@ __NO_RETURN void send_thread(void *arg)
     for(;;)
     {
         osMessageQueueGet(tar->queue_send, &msgbuf, nullptr, osWaitForever);
-        USART_send_byte(tar->port, msgbuf.channel); // send channel byte
-        USART_send_bytes(tar->port, &msgbuf.data, msgbuf.len); // send data
+        if(tar->port == USART3)
+        {
+            WLAN_send_byte(msgbuf.channel);
+            WLAN_send_bytes(&msgbuf.data, msgbuf.len);
+        }
+        else
+        {
+            USART_send_byte(tar->port, msgbuf.channel); // send channel byte
+            USART_send_bytes(tar->port, &msgbuf.data, msgbuf.len); // send data
+        }
     }
 }

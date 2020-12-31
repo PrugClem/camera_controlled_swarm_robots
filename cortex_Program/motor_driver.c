@@ -1,3 +1,8 @@
+/**
+ *  This file is responsible of initialising verything the motors need to run properly
+ *  This file is also responsible for handling string/binary commands for the motor
+ */
+
 #include "motor_driver.h"
 
 double duty_cycle_left = 0.05, duty_cycle_right = 0.05;
