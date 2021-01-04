@@ -3,9 +3,7 @@
         {
             "name": "Win32",
             "includePath": [
-                "${workspaceFolder}/**",
-                "../../library/cppsock",
-                "../../library/mingw-std-threads-master"
+                "${workspaceFolder}/**"
             ],
             "defines": [
                 "_DEBUG",
@@ -13,9 +11,9 @@
                 "_UNICODE"
             ],
             "compilerPath": "g++.exe",
-            "cStandard": "c11",
-            "cppStandard": "gnu++17",
-            "intelliSenseMode": "clang-x86"
+            "cStandard": "gnu17",
+            "cppStandard": "gnu++14",
+            "intelliSenseMode": "gcc-x64"
         }
     ],
     "version": 4
