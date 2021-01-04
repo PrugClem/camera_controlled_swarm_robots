@@ -4,6 +4,6 @@ g++ -Wall -O3 -std=c++17 -I../../library/cppsock -I../../library/mingw-std-threa
 g++ -Wall -O3 -std=c++17 -I../../library/cppsock -I../../library/mingw-std-threads-master -c msh_src/server.cpp -o obj/server.o
 g++ -Wall -O3 -std=c++17 -I../../library/cppsock -I../../library/mingw-std-threads-master -c msh_src/client.cpp -o obj/client.o
 
-g++ -s -L../../library/cppsock -L../../library/ws2_32 -o SockenHandler.exe obj/main.o obj/sockethandler.o obj/server.o obj/client.o ../../library/cppsock/cppsock_winonly.cpp -lcppsock -lws2_32
+g++ -s -L../../library/cppsock -o SockenHandler.exe obj/main.o obj/sockethandler.o obj/server.o obj/client.o ../../library/cppsock/cppsock_winonly.cpp -lcppsock -lws2_32
 
-ar -s -r libsockethandler.a obj/sockethandler.o obj/server.o obj/client.o ../../library/cppsock/cppsock_winonly.cpp ../../library/cppsock/libcppsock.a ../../library/ws2_32/libws2_32.a
+ar -s -r libsockethandler.a obj/sockethandler.o obj/server.o obj/client.o
