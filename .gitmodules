@@ -1,0 +1,3 @@
+[submodule "library/--force"]
+	path = library/--force
+	url = https://github.com/PrugClem/cppsock.git
