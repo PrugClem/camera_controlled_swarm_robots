@@ -8,7 +8,7 @@ LDIR =.
 LIBS=-lm
 
 LIB_OUT = libSvVis_PC.a
-CPPSOCK = ../cppsock/libcppsock.a
+CPPSOCK = ../submodules/cppsock/out/libcppsock.a
 
 _DEPS = SvVis_PC.hpp
 DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
@@ -22,10 +22,13 @@ full:
 
 # create object file
 $(ODIR)/%.o: % $(DEPS)
+	mkdir obj || cd .
 	$(CC) -c -o $@ $< $(CFLAGS)
 
 # create library
 $(LIB_OUT): $(OBJ)
+# ar single line command
+	#ar -r $(LIB_OUT) $(OBJ) $(CPPSOCK)
 # create temporary SvVis library to merge
 	ar -r -s tmplib.a $(OBJ)
 # merge SvVis library with cppsock library

@@ -1,7 +1,7 @@
 #ifndef SvVIS_PC_HPP_INCLUDED
 #define SvVIS_PC_HPP_INCLUDED
 
-#include "../cppsock/cppsock.hpp"
+#include "../submodules/cppsock/cppsock.hpp"
 #include "config.hpp"
 #include <iostream>
 
