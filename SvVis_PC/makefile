@@ -8,7 +8,7 @@ LDIR =.
 LIBS=-lm
 
 LIB_OUT = libSvVis_PC.a
-CPPSOCK = ../submodules/cppsock/out/libcppsock.a
+CPPSOCK = ../library/cppsock/out/libcppsock.a
 
 _DEPS = SvVis_PC.hpp
 DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
