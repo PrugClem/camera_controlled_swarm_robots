@@ -1,6 +1,6 @@
 #include "SvVis_PC.hpp"
 
-void SvVis3_data_t::apply_msg(SvVis3_message_t &msg)
+void SvVis::SvVis3_data_t::apply_msg(SvVis3_message_t &msg)
 {
     if((msg.channel >= SvVIS3_I16_CHANNEL_BASE) && (msg.channel < SvVIS3_I16_CHANNEL_BASE + SvVis3_CHANNEL_COUNT)) // 11..19
     {
@@ -22,17 +22,17 @@ void SvVis3_data_t::apply_msg(SvVis3_message_t &msg)
     }
 }
 
-bool SvVis::open(const std::string &conv_ser, uint16_t conv_port)
+bool SvVis::SvVis::open(const std::string &conv_ser, uint16_t conv_port)
 {
     return cppsock::tcp_client_connect(this->sock, conv_ser.c_str(), conv_port) == 0;
 }
 
-bool SvVis::is_open(void)
+bool SvVis::SvVis::is_open(void)
 {
     return this->sock.is_valid();
 }
 
-void SvVis::close(void)
+void SvVis::SvVis::close(void)
 {
     this->sock.close();
 }
@@ -46,7 +46,7 @@ uint8_t chid2len(uint8_t chid)
     return 0;
 }
 
-void SvVis::recv_msg(SvVis3_message_t &msgbuf)
+void SvVis::SvVis::recv_msg(SvVis3_message_t &msgbuf)
 {
     char recvbuf;
     uint8_t maxlen;
@@ -77,13 +77,13 @@ void SvVis::recv_msg(SvVis3_message_t &msgbuf)
     }
 }
 
-void SvVis::send_msg(SvVis3_message_t &msg)
+void SvVis::SvVis::send_msg(SvVis3_message_t &msg)
 {
     this->sock.send(&msg.channel, sizeof(SvVis3_channel_t), 0);
     this->sock.send(msg.data.raw, msg.len, 0);
 }
 
-void SvVis::send_string(const std::string &str)
+void SvVis::SvVis::send_string(const std::string &str)
 {
     SvVis3_message_t msg;
     msg.channel = SvVIS3_STRING_CHANNEL;
@@ -92,7 +92,7 @@ void SvVis::send_string(const std::string &str)
     this->send_msg(msg);
 }
 
-void SvVis::send_i16(SvVis3_channel_t channel, int16_t data)
+void SvVis::SvVis::send_i16(SvVis3_channel_t channel, int16_t data)
 {
     SvVis3_message_t msg;
     msg.channel = SvVIS3_I16_CHANNEL_BASE + channel;
@@ -101,7 +101,7 @@ void SvVis::send_i16(SvVis3_channel_t channel, int16_t data)
     this->send_msg(msg);
 }
 
-void SvVis::send_i32(SvVis3_channel_t channel, int32_t data)
+void SvVis::SvVis::send_i32(SvVis3_channel_t channel, int32_t data)
 {
     SvVis3_message_t msg;
     msg.channel = SvVIS3_I32_CHANNEL_BASE + channel;
@@ -110,7 +110,7 @@ void SvVis::send_i32(SvVis3_channel_t channel, int32_t data)
     this->send_msg(msg);
 }
 
-void SvVis::send_float(SvVis3_channel_t channel, float data)
+void SvVis::SvVis::send_float(SvVis3_channel_t channel, float data)
 {
     SvVis3_message_t msg;
     msg.channel = SvVIS3_FLOAT_CHANNEL_BASE + channel;

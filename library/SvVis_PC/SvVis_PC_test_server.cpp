@@ -35,7 +35,7 @@ void cl2lo(cppsock::socket *lo, cppsock::socket *cl)
 int main()
 {
     cppsock::socket socket_lo, socket_cl;
-    SvVis sock_lo;
+    SvVis::SvVis sock_lo;
     std::thread l2c(lo2cl, &socket_lo, &socket_cl),
                 c2l(cl2lo, &socket_lo, &socket_cl);
     std::cout << "set up, connecting to loopback" << std::endl;
@@ -43,7 +43,7 @@ int main()
     if(sock_lo.is_open())
     {
         std::cout << "server ready" << std::endl;
-        SvVis3_message_t msg;
+        SvVis::SvVis3_message_t msg;
         sock_lo.recv_msg(msg);
         std::cout << msg.data.raw << std::endl;
         sock_lo.send_string("hello there");

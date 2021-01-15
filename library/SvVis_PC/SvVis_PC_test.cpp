@@ -5,8 +5,8 @@
 
 int main()
 {
-    SvVis cortex;
-    SvVis3_message_t msg;
+    SvVis::SvVis cortex;
+    SvVis::SvVis3_message_t msg;
     std::cout << "starting" << std::endl;
     if(!cortex.open("localhost", 10001))
     {

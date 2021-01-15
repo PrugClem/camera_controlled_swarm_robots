@@ -5,6 +5,9 @@
 #include "config.hpp"
 #include <iostream>
 
+namespace SvVis
+{
+
 struct SvVis3_message_t
 {
     SvVis3_channel_t channel;
@@ -47,5 +50,7 @@ public:
     void send_i32(SvVis3_channel_t channel, int32_t data);
     void send_float(SvVis3_channel_t channel, float data);
 };
+
+} // namespace SvVis
 
 #endif // SvVIS_PC_HPP_INCLUDED
