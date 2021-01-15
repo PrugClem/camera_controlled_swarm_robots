@@ -9,6 +9,10 @@ LIBS=-lm
 
 LIB_OUT = libSvVis_PC.a
 CPPSOCK = ../library/cppsock/out/libcppsock.a
+CPPSOCK_OBJ = 	../library/cppsock/obj/cppsock_addressinfo.cpp.o\
+		 		../library/cppsock/obj/cppsock_socket.cpp.o\
+				../library/cppsock/obj/cppsock_socketaddr.cpp.o\
+				../library/cppsock/obj/cppsock_utility.cpp.o
 
 _DEPS = SvVis_PC.hpp
 DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
@@ -28,7 +32,7 @@ $(ODIR)/%.o: % $(DEPS)
 # create library
 $(LIB_OUT): $(OBJ)
 # ar single line command
-	#ar -r $(LIB_OUT) $(OBJ) $(CPPSOCK)
+	#ar -r $(LIB_OUT) $(OBJ) $(CPPSOCK_OBJ)
 # create temporary SvVis library to merge
 	ar -r -s tmplib.a $(OBJ)
 # merge SvVis library with cppsock library
@@ -37,10 +41,10 @@ $(LIB_OUT): $(OBJ)
 
 #build est programs
 test: $(OBJ)
-	$(CC) -o SvVis_PC_test \
+	$(CC) -pthread -o SvVis_PC_test \
 		SvVis_PC_test.cpp \
 		$(LIB_OUT)
-	$(CC) -o SvVis_PC_test_server \
+	$(CC) -pthread -o SvVis_PC_test_server \
 		SvVis_PC_test_server.cpp \
 		$(LIB_OUT)
 

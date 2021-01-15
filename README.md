@@ -1,5 +1,15 @@
 # camera_controlled_swarm_robots
 
+get this repostiory with submodules:
+```
+git clone https://github.com/PrugClem/camera_controlled_swarm_robots  --recurse-submodules
+```
+or initialise the submodules afterwards
+```
+git clone https://github.com/PrugClem/camera_controlled_swarm_robots
+git submodule update --init
+```
+
 used external libraries:
  * [cppsock](https://github.com/PrugClem/cppsock)
  * [glm](https://github.com/g-truc/glm)
