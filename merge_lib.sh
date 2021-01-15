@@ -1,9 +1,10 @@
 #!/bin/sh
 if [ $# -gt 2 ]
     then
-    echo "\n" # print 2 empty lines at the start
+    echo "\n\n" # print 2 empty lines at the start
 
     out=$1 # copy output file name to variable
+    echo "output library: $out"
     shift # shift arguments by 1 to get rid of output file name
 
     mkdir -p __tmp # make temporary directory
@@ -25,7 +26,7 @@ if [ $# -gt 2 ]
     cd .. # leave temporary directory
 
     rm -r __tmp # remove temporary directory with content
-    echo "\n" # print 2 empty lines at the end
+    echo "\n\n" # print 2 empty lines at the end
 else
     echo "usage:" $0 "<lib (out)>" "<lib (in)>" "<lib (in)> ..."
 fi
