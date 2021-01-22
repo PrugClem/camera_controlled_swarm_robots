@@ -12,22 +12,29 @@
 #include <string.h>
 #include <math.h>
 
+#include "SvVis_cortex.hpp"
+
 #ifdef __cplusplus
 extern "C"
 {
 #endif // __cplusplus
 
-typedef uint8_t motor_cmd_bin_t;
+//typedef uint8_t motor_cmd_bin_t;
+typedef enum
+{
+    MOTOR_CMD_STOP,
+    MOTOR_CMD_FW,
+    MOTOR_CMD_BW,
+    MOTOR_CMD_RR,
+    MOTOR_CMD_RL
+} motor_cmd_bin_t;
 
 void motor_init(void);
-bool motor_cmd_str(const char* cmd);
+bool motor_cmd_str(const char* cmd, SvVis_t *src);
 bool motor_cmd_bin(motor_cmd_bin_t cmd, uint32_t time);
 
-#define MOTOR_CMD_STOP ((motor_cmd_bin_t) 0)
-#define MOTOR_CMD_FW   ((motor_cmd_bin_t) 1)
-#define MOTOR_CMD_BW   ((motor_cmd_bin_t) 2)
-#define MOTOR_CMD_RR   ((motor_cmd_bin_t) 3)
-#define MOTOR_CMD_RL   ((motor_cmd_bin_t) 4)
+void motor_update_speed(void);
+void motor_set_speed(float new_speed);
 
 #ifdef __cplusplus
 }

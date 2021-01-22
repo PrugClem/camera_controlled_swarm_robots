@@ -52,7 +52,8 @@ public:
     USART_TypeDef *port;
     //osThreadId_t thread_usart;
     osThreadId_t thread_recv, thread_send;
-    osMessageQueueId_t queue_usart, queue_recv, queue_send;
+    osMessageQueueId_t queue_recv, queue_send;
+    ring_pipe *pipe_data;
     
     bool init(USART_TypeDef *port, uint32_t baud);
 

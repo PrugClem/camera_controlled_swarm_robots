@@ -18,13 +18,13 @@ __NO_RETURN void recv_thread(void *arg)
 {
     SvVis_t *tar = (SvVis_t*)arg;
     SvVis_message_t msgbuf;
-    char recvbuf;
+    uint8_t recvbuf;
     uint8_t maxlen;
     for(;;)
     {
         // init length number
         msgbuf.len = 0;
-        osMessageQueueGet(tar->queue_usart, &recvbuf, nullptr, osWaitForever);
+        tar->pipe_data->pop(recvbuf, osWaitForever);
         msgbuf.channel = recvbuf;
         maxlen = chid2len(msgbuf.channel);
         // initialise data with zeros
@@ -34,7 +34,7 @@ __NO_RETURN void recv_thread(void *arg)
         {
             while(msgbuf.len < maxlen) // non-string handling
             {
-                osMessageQueueGet(tar->queue_usart, &recvbuf, nullptr, osWaitForever);
+                tar->pipe_data->pop(recvbuf, osWaitForever);
                 // push back recvbuf
                 if(msgbuf.len < SvVIS_DATA_MAX_LEN) {msgbuf.data.raw[msgbuf.len++] = recvbuf;}
             }
@@ -43,7 +43,7 @@ __NO_RETURN void recv_thread(void *arg)
         {
             while(recvbuf != '\0')
             {
-                osMessageQueueGet(tar->queue_usart, &recvbuf, nullptr, osWaitForever);
+                tar->pipe_data->pop(recvbuf, osWaitForever);
                 // push back received character
                 if(msgbuf.len < SvVIS_DATA_MAX_LEN-1) {msgbuf.data.raw[msgbuf.len++] = recvbuf;} // write character from input data
             }

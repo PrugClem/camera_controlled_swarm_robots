@@ -13,7 +13,7 @@
 void init_wlan()
 {
     // USART connection via USART3 is ready to use
-    queue_usart3 = osMessageQueueNew(SvVIS_WLAN_BACKLOG, sizeof(char), nullptr);
+    pipe_wlan.init(SvVIS_WLAN_BACKLOG);
     return;
 }
 

@@ -5,7 +5,7 @@
  */
 
 #include "SvVis_cortex.hpp"
-#include "motor_driver.h"
+#include "motor_driver.hpp"
 #include "LED_driver.h"
 
 // main thread
@@ -85,8 +85,8 @@ void main_thread_func(void *arg)
             sender->recv_msg(msg); // receive a message
 
             // debug output
-            sender->send_str("confirm message"); // confim the received message
-            sender->send_msg(msg);               // can be removed, this is mainly for testing puropses
+            //sender->send_str("confirm message"); // confim the received message
+            //sender->send_msg(msg);               // can be removed, this is mainly for testing puropses
 
             if( msg.is_string() ) // only process string messages
             {
@@ -94,18 +94,20 @@ void main_thread_func(void *arg)
                 {
                     // "short" help page
                     sender->send_str("Supported Commands:");
-                    sender->send_str("stop   Stop");
-                    sender->send_str("fw <t> Move Forard");
-                    sender->send_str("bw <t> Move Backwards");
-                    sender->send_str("rr <t> Rotate Right");
-                    sender->send_str("rl <t> Rotate Left");
+                    sender->send_str("stop      Stop");
+                    sender->send_str("fw <t>    Move Forard");
+                    sender->send_str("bw <t>    Move Backwards");
+                    sender->send_str("rr <t>    Rotate Right");
+                    sender->send_str("rl <t>    Rotate Left");
+                    sender->send_str("speed <n> Set speed factor");
+                    sender->send_str("          default: 128");
                     sender->send_str(" ");
                     sender->send_str("<t> indicates that it is");
                     sender->send_str(" possible to run a command for");
                     sender->send_str(" a limited time only");
                     sender->send_str(" ");
                 }
-                else if(!motor_cmd_str(msg.data.raw)) // run a motor command
+                else if(!motor_cmd_str(msg.data.raw, sender)) // run a motor command
                 {
                     // error output
                     sender->send_str("unknown command");

@@ -20,23 +20,23 @@ bool SvVis_t::init(USART_TypeDef *port, uint32_t baud)
     {
         if(_usart1_handler != nullptr) return false;
         _usart1_handler = this;
-        // for usart1 (daplink), no overhead is used, so the raw usart queue can be used
-        this->queue_usart = queue_usart1 = osMessageQueueNew(SvVIS_USART_BACKLOG, sizeof(char), nullptr);
+        // for usart1 (daplink), no overhead is used, so the raw usart pipe can be used
+        this->pipe_data = &pipe_usart1;
     }
     else if(port == USART2)
     {
         if(_usart2_handler != nullptr) return false;
         _usart2_handler = this;
-        //for usart2 (bluetooth HC06), no overhead is used, so the raw usart queue can be used
-        this->queue_usart = queue_usart2 = osMessageQueueNew(SvVIS_USART_BACKLOG, sizeof(char), nullptr);
+        //for usart2 (bluetooth HC06), no overhead is used, so the raw usart pipe can be used
+        this->pipe_data = &pipe_usart2;
     }
     else if(port == USART3)
     {
         if(_usart3_handler != nullptr) return false;
         _usart3_handler = this;
-        // queue_usart3 contains the raw communication with the WLAN module (with overhead), a eperate queue for processed data is used instead
-        this->queue_usart = queue_wlan = osMessageQueueNew(SvVIS_WLAN_BACKLOG, sizeof(char), nullptr);
-        init_wlan(); // initialise WLAN after initialising the message queue
+        // pipe_usart3 contains the raw communication with the WLAN module (with overhead), a seperate pipe for processed data is used instead
+        this->pipe_data = &pipe_wlan;
+        init_wlan(); // initialise WLAN after initialising the message pipe
     }
     else
     {

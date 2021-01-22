@@ -7,6 +7,8 @@
 #include "stm32f10x_usart.h"
 #include "cmsis_os2.h"
 
+#include "ring_pipe.hpp"
+
 #ifdef __cplusplus
 extern "C"
 {
@@ -16,8 +18,8 @@ void init_usart(USART_TypeDef *usartn, uint32_t baud);
 void USART_send_bytes(USART_TypeDef* port, const void *start, size_t len);
 void USART_send_byte(USART_TypeDef* port, uint8_t byte);
 
-extern osMessageQueueId_t queue_usart1, queue_usart2, queue_usart3; // message queues for incoming bytes, usart3 contains raw data
-extern osMessageQueueId_t queue_wlan; // message queue for WLAN processed data
+extern ring_pipe pipe_usart1, pipe_usart2, pipe_usart3; // message queues for incoming bytes, usart3 contains raw data
+extern ring_pipe pipe_wlan; // message queue for WLAN processed data
 
 void init_wlan();
 /// cmd does not include end of command sequence

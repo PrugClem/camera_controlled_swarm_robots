@@ -3,9 +3,12 @@
  *  This file is also responsible for handling string/binary commands for the motor
  */
 
-#include "motor_driver.h"
+#include "motor_driver.hpp"
+#include "extra.hpp"
 
-double duty_cycle_left = 0.05, duty_cycle_right = 0.05;
+double speed_mult = 1.0;
+double base_speed_left = 0.1, base_speed_right = 0.1;
+uint16_t timer_period = 4096;
 osTimerId_t os_timer_stop;
 
 void TIM3_IRQHandler(void)
@@ -42,21 +45,18 @@ void timer_init(void)
     timer.TIM_CounterMode = TIM_CounterMode_Up; // count upwards
     timer.TIM_ClockDivision = TIM_CKD_DIV1; // no clock division
     timer.TIM_Prescaler = 256; // prescaler
-    timer.TIM_Period = 4096; // autoreload
+    timer.TIM_Period = timer_period; // autoreload
     TIM_TimeBaseInit(TIM3, &timer);
 
+    memset(&outputcompare, 0, sizeof(outputcompare));
     outputcompare.TIM_OCMode = TIM_OCMode_PWM1;
-    outputcompare.TIM_OCIdleState = TIM_OCIdleState_Reset;
-    outputcompare.TIM_OCNIdleState = TIM_OCNIdleState_Reset;
-    outputcompare.TIM_OCNPolarity = TIM_OCNPolarity_High;
-    outputcompare.TIM_OCPolarity = TIM_OCPolarity_High;
-    outputcompare.TIM_OutputNState = TIM_OutputNState_Disable;
     outputcompare.TIM_OutputState = TIM_OutputState_Enable;
-    outputcompare.TIM_Pulse = timer.TIM_Period * duty_cycle_left;
+    outputcompare.TIM_Pulse = timer.TIM_Period * base_speed_left * speed_mult;
     TIM_OC3Init(TIM3, &outputcompare);
     TIM_ITConfig(TIM3, TIM_IT_CC3, ENABLE);
 
-    outputcompare.TIM_Pulse = timer.TIM_Period * duty_cycle_right;
+float speed_mult = 1.0;
+    outputcompare.TIM_Pulse = timer.TIM_Period * base_speed_right * speed_mult;
     TIM_OC4Init(TIM3, &outputcompare);
     TIM_ITConfig(TIM3, TIM_IT_CC4, ENABLE);
 
@@ -91,7 +91,7 @@ void motor_init(void)
     os_timer_stop = osTimerNew(motor_stop, osTimerOnce, NULL, NULL);
 }
 
-bool motor_cmd_str(const char* cmd)
+bool motor_cmd_str(const char* cmd, SvVis_t *src)
 {
     uint32_t time = osWaitForever;
     // after the end of the string, the buffer is consistently filled with zeros thanks to memset() in recv_thread() in SvVis_cortex_threads.cpp
@@ -120,6 +120,22 @@ bool motor_cmd_str(const char* cmd)
         time = strtoul(cmd+3, NULL, 0); // "rl %d"
         motor_cmd_bin(MOTOR_CMD_RL, time);
     }
+    else if( strncmp(cmd, "speed", 5) == 0 )
+    {
+        if(strlen(cmd) == 5)
+        {
+            char msg[32];
+            //snprintf(msg, sizeof(msg), "current speed: %d", (int)(speed_mult * 128) );
+            strcpy(msg, "current speed: ");
+            ul_to_string(msg+15, sizeof(msg)-15, speed_mult*128);
+            src->send_str(msg);
+        }
+        else
+        {
+            time = strtoul(cmd+6, NULL, 0); // "speed %d"
+            motor_set_speed(time / 128.0);
+        }
+    }
     else // unrecognized command, stopping
     {
         motor_cmd_bin(MOTOR_CMD_STOP, osWaitForever);
@@ -133,27 +149,22 @@ bool motor_cmd_bin(motor_cmd_bin_t cmd, uint32_t time)
     switch (cmd)
     {
     case MOTOR_CMD_STOP:
-        // Disable Motor enable Signal
         //GPIO_ResetBits(GPIOA, GPIO_Pin_0 | GPIO_Pin_1 | GPIO_Pin_6 | GPIO_Pin_7);
         motor_stop(NULL);
         break;
     case MOTOR_CMD_FW:
-        // Enable Motor enable Signal
         GPIO_SetBits(GPIOA, GPIO_Pin_0 | GPIO_Pin_6);
         GPIO_ResetBits(GPIOA, GPIO_Pin_1 | GPIO_Pin_7);
         break;
     case MOTOR_CMD_BW:
-        // Enable Motor enable Signal
         GPIO_SetBits(GPIOA, GPIO_Pin_1 | GPIO_Pin_7);
         GPIO_ResetBits(GPIOA, GPIO_Pin_0 | GPIO_Pin_6);
         break;
     case MOTOR_CMD_RR:
-        // Enable Motor enable Signal
         GPIO_SetBits(GPIOA, GPIO_Pin_1 | GPIO_Pin_6);
         GPIO_ResetBits(GPIOA, GPIO_Pin_0 | GPIO_Pin_7);
         break;
     case MOTOR_CMD_RL:
-        // Enable Motor enable Signal
         GPIO_SetBits(GPIOA, GPIO_Pin_0 | GPIO_Pin_7);
         GPIO_ResetBits(GPIOA, GPIO_Pin_1 | GPIO_Pin_6);
         break;
@@ -165,4 +176,24 @@ bool motor_cmd_bin(motor_cmd_bin_t cmd, uint32_t time)
     }
     osTimerStart(os_timer_stop, time);
     return true; // return true if a valid command was used
+}
+
+void motor_update_speed(void)
+{
+    TIM_OCInitTypeDef outputcompare;
+
+    memset(&outputcompare, 0, sizeof(outputcompare));
+    outputcompare.TIM_OCMode = TIM_OCMode_PWM1;
+    outputcompare.TIM_OutputState = TIM_OutputState_Enable;
+    outputcompare.TIM_Pulse = timer_period * base_speed_left * speed_mult;
+    TIM_OC3Init(TIM3, &outputcompare);
+
+    outputcompare.TIM_Pulse = timer_period * base_speed_right * speed_mult;
+    TIM_OC4Init(TIM3, &outputcompare);
+}
+
+void motor_set_speed(float new_speed)
+{
+    speed_mult = new_speed;
+    motor_update_speed();
 }

@@ -401,11 +401,6 @@
               <FilePath>.\LED_driver.c</FilePath>
             </File>
             <File>
-              <FileName>motor_driver.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\motor_driver.c</FilePath>
-            </File>
-            <File>
               <FileName>USART_driver.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>.\USART_driver.cpp</FilePath>
@@ -414,6 +409,21 @@
               <FileName>WLAN_driver.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>.\WLAN_driver.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>motor_driver.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\motor_driver.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>ring_pipe.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\ring_pipe.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>extra.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\extra.cpp</FilePath>
             </File>
           </Files>
         </Group>

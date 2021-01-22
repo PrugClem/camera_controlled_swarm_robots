@@ -13,14 +13,14 @@
 /**
  *  The usart queues are ALWAYS the raw data, whereas the WLAN queue is the queue for decoded received WLAN data
  */
-osMessageQueueId_t queue_usart1, queue_usart2, queue_usart3;
-osMessageQueueId_t queue_wlan;
+ring_pipe pipe_usart1, pipe_usart2, pipe_usart3;
+ring_pipe pipe_wlan;
 
 extern "C" void USART1_IRQHandler(void)
 {
     char input;
     input = USART_ReceiveData(USART1);
-    osMessageQueuePut(queue_usart1, &input, nullptr, 0);
+    pipe_usart1.put(input, 0);
     return;
 }
 
@@ -28,7 +28,7 @@ extern "C" void USART2_IRQHandler(void)
 {
     char input;
     input = USART_ReceiveData(USART2);
-    osMessageQueuePut(queue_usart2, &input, nullptr, 0);
+    pipe_usart2.put(input, 0);
     return;
 }
 
@@ -36,7 +36,7 @@ extern "C" void USART3_IRQHandler(void)
 {
     char input;
     input = USART_ReceiveData(USART3);
-    osMessageQueuePut(queue_usart3, &input, nullptr, 0);
+    pipe_usart3.put(input, 0);
     return;
 }
 
@@ -76,6 +76,8 @@ void init_usart(USART_TypeDef *usartn, uint32_t baud)
         TX.GPIO_Pin = GPIO_Pin_9;
         GPIO_Init(GPIOA, &TX);
 
+        pipe_usart1.init(SvVIS_USART_BACKLOG);
+
         nvic.NVIC_IRQChannel = USART1_IRQn;
         nvic.NVIC_IRQChannelCmd = ENABLE;
     }
@@ -89,6 +91,8 @@ void init_usart(USART_TypeDef *usartn, uint32_t baud)
         TX.GPIO_Pin = GPIO_Pin_2;
         GPIO_Init(GPIOA, &TX);
 
+        pipe_usart2.init(SvVIS_USART_BACKLOG);
+
         nvic.NVIC_IRQChannel = USART2_IRQn;
         nvic.NVIC_IRQChannelCmd = ENABLE;
     }
@@ -101,6 +105,8 @@ void init_usart(USART_TypeDef *usartn, uint32_t baud)
         GPIO_Init(GPIOB, &RX);
         TX.GPIO_Pin = GPIO_Pin_10;
         GPIO_Init(GPIOB, &TX);
+
+        pipe_usart3.init(SvVIS_USART_BACKLOG);
 
         nvic.NVIC_IRQChannel = USART3_IRQn;
         nvic.NVIC_IRQChannelCmd = ENABLE;
