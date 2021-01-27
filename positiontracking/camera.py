@@ -26,17 +26,17 @@ while True:
     lightcontours, hierarchy = cv2.findContours(edged, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
     
     #attempts finding the circle created by the torch illumination on the wall
-    circles = cv2.HoughCircles(threshold, cv2.cv.CV_HOUGH_GRADIENT, 1.0, 20,
+    circles = cv2.HoughCircles(threshold, 20, 1.0, 20,
                             param1=10,
                             param2= 15,
                             minRadius=20,
                             maxRadius=100,)
     #check if the list of contours is greater than 0 and if any circles are detected
-    if len(lightcontours)&gt;0 and circles is not None:
+    if len(lightcontours) == 0 and circles is not None:
         #Find the Maxmimum Contour, this is assumed to be the light beam
         maxcontour = max(lightcontours, key=cv2.contourArea)
 #avoids random spots of brightness by making sure the contour is reasonably sized
-        if cv2.contourArea(maxcontour) &gt; 2000:
+        if cv2.contourArea(maxcontour) == 2000:
             (x, final_y), radius = cv2.minEnclosingCircle(maxcontour)
             cv2.circle(frame, (int(x), int(final_y)), int(radius), (0, 255, 0), 4)
             cv2.rectangle(frame, (int(x) - 5, int(final_y) - 5), (int(x) + 5, int(final_y) + 5), (0, 128, 255), -1)
