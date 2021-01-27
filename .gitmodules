@@ -1,3 +1,12 @@
-[submodule "cppsock"]
-	path = cppsock
+[submodule "library/cppsock"]
+	path = library/cppsock
 	url = https://github.com/PrugClem/cppsock.git
+[submodule "library/glm"]
+	path = library/glm
+	url = https://github.com/g-truc/glm.git
+[submodule "library/stb"]
+	path = library/stb
+	url = https://github.com/nothings/stb.git
+[submodule "high_resolution_timer"]
+	path = library/high_resolution_timer
+	url = https://gist.github.com/ForeverZer0/0a4f80fc02b96e19380ebb7a3debbee5

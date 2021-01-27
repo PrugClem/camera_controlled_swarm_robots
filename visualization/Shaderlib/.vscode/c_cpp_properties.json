@@ -4,16 +4,16 @@
             "name": "Win32",
             "includePath": [
                 "${workspaceFolder}/**",
-                "E:\\Privat\\Programmieren\\Klassen\\glew-2.1.0\\include",
-                "C:\\CodeBlocks\\GLFW-2.7\\include",
-                "E:\\Privat\\Programmieren\\Klassen\\glm"
+                "../../library/glew-2.1.0/include",
+                "../../library/glm",
+                "../../library/GLFW-2.7/include"
             ],
             "defines": [
                 "_DEBUG",
                 "UNICODE",
                 "_UNICODE"
             ],
-            "compilerPath": "C:\\CodeBlocks\\gcc-8.2-32\\bin\\gcc.exe",
+            "compilerPath": "g++.exe",
             "cStandard": "c11",
             "cppStandard": "gnu++17",
             "intelliSenseMode": "clang-x86"

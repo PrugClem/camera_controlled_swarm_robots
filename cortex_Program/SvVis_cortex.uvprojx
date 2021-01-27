@@ -401,9 +401,29 @@
               <FilePath>.\LED_driver.c</FilePath>
             </File>
             <File>
-              <FileName>motor_driver.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\motor_driver.c</FilePath>
+              <FileName>USART_driver.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\USART_driver.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>WLAN_driver.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\WLAN_driver.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>motor_driver.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\motor_driver.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>ring_pipe.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\ring_pipe.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>extra.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\extra.cpp</FilePath>
             </File>
           </Files>
         </Group>
@@ -462,6 +482,12 @@
       </component>
       <component Cclass="Device" Cgroup="StdPeriph Drivers" Csub="RCC" Cvendor="Keil" Cversion="3.5.0" condition="STM32F1xx STDPERIPH">
         <package name="STM32F1xx_DFP" schemaVersion="1.4.0" url="http://www.keil.com/pack/" vendor="Keil" version="2.2.0"/>
+        <targetInfos>
+          <targetInfo name="ARM_Minalsystem"/>
+        </targetInfos>
+      </component>
+      <component Cclass="Device" Cgroup="StdPeriph Drivers" Csub="TIM" Cvendor="Keil" Cversion="3.5.0" condition="STM32F1xx STDPERIPH RCC">
+        <package name="STM32F1xx_DFP" schemaVersion="1.4.0" url="http://www.keil.com/pack/" vendor="Keil" version="2.3.0"/>
         <targetInfos>
           <targetInfo name="ARM_Minalsystem"/>
         </targetInfos>

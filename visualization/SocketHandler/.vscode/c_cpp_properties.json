@@ -4,15 +4,15 @@
             "name": "Win32",
             "includePath": [
                 "${workspaceFolder}/**",
-                "E:/Privat/Programmieren/Klassen/cppsock",
-                "E:/Privat/Programmieren/Klassen/mingw-std-threads-master"
+                "../../library/cppsock",
+                "../../library/mingw-std-threads-master"
             ],
             "defines": [
                 "_DEBUG",
                 "UNICODE",
                 "_UNICODE"
             ],
-            "compilerPath": "C:\\CodeBlocks\\gcc-8.2-32\\bin\\gcc.exe",
+            "compilerPath": "g++.exe",
             "cStandard": "c11",
             "cppStandard": "gnu++17",
             "intelliSenseMode": "clang-x86"

@@ -1,19 +1,32 @@
 #!/bin/sh
 if [ $# -gt 2 ]
     then
-    mkdir -p __tmp
-    cd __tmp
+    echo "\n\n" # print 2 empty lines at the start
 
-        for var in ${@:2}
+    out=$1 # copy output file name to variable
+    echo "output library: $out"
+    shift # shift arguments by 1 to get rid of output file name
+
+    mkdir -p __tmp # make temporary directory
+    cd __tmp # change to temporary directory
+
+#        for var in ${@:2}
+#        do
+#            #echo "argument in for loop: " $var
+#            ar -x ../$var
+#        done
+        while [ $# -gt 0 ] # while there are libraries to process
         do
-            #echo "argument in for loop: " $var
-            ar -x ../$var
+            echo "extracting library $1" # argv[1] is the library that should be extracted, once it is handled, shift gets rid of the argument
+            ar -x ../$1 # extracting the current library
+            shift # getting rid of extracted library
         done
+        echo "combining libraries into $out"
+        ar -rc ../$out *.o
+    cd .. # leave temporary directory
 
-        ar -rc ../$1 *.o
-    cd ..
-
-    rm -r __tmp
+    rm -r __tmp # remove temporary directory with content
+    echo "\n\n" # print 2 empty lines at the end
 else
     echo "usage:" $0 "<lib (out)>" "<lib (in)>" "<lib (in)> ..."
 fi

@@ -1,12 +1,7 @@
-#include <iostream>
-#include "display.h"
 
-using namespace std;
-
+// there is not testing source
+// it is only there for later use
 int main()
 {
-    console_init();
-
-    cout << "Hello world!" << endl;
     return 0;
 }

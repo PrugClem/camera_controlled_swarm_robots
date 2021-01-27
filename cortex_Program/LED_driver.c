@@ -1,4 +1,22 @@
+/**
+ *  This file handles the heartbet LED and the 3 triagle LEDs used to indentify the car
+ *  The heartbeat LED can be used as an indicator if the CMSIS RTOS kernel is still running properly
+ *  If the heartbeat LED stops blinking, something has gone very wrong
+ */
+
 #include "LED_driver.h"
+
+__NO_RETURN void __LED_heartbeat_function(void *arg)
+{
+    for(;;)
+    {
+        LED_heartbeat(true);
+        osDelay(100);
+        LED_heartbeat(false);
+        osDelay(100);
+    }
+}
+osThreadId_t __LED_heartbeat_handle;
 
 void LED_init(void)
 {
@@ -20,6 +38,8 @@ void LED_init(void)
     //set PC0 as output for Heartbeat LED
     gpio.GPIO_Pin = GPIO_Pin_3;
     GPIO_Init(GPIOC, &gpio);
+
+    __LED_heartbeat_handle = osThreadNew(__LED_heartbeat_function, NULL, NULL);
 }
 
 void LED_heartbeat(bool newstate)
