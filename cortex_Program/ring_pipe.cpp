@@ -13,11 +13,19 @@ osStatus_t ring_pipe::init(size_t maxsize)
     this->_m_start = (uint8_t*)osMemoryPoolAlloc(this->_mem, 0);
     this->_m_end = _m_start + maxsize;
     this->_d_start = this->_d_end = this->_m_start;
+    this->_enable_put = true;
+    return osOK;
+}
+
+osStatus_t ring_pipe::enaple_put(bool newstate)
+{
+    this->_enable_put = newstate;
     return osOK;
 }
 
 osStatus_t ring_pipe::put(uint8_t data, uint32_t timeout)
 {
+    if(!this->_enable_put) {return osErrorParameter;}
     osStatus_t status;
     // remove 1 empty slot, insert data, and add 1 data slot
     if( (status = osSemaphoreAcquire(this->_slots_empty, timeout)) != osOK) {return status;} // return on timeout

@@ -19,15 +19,14 @@ void USART_send_bytes(USART_TypeDef* port, const void *start, size_t len);
 void USART_send_byte(USART_TypeDef* port, uint8_t byte);
 
 extern ring_pipe pipe_usart1, pipe_usart2, pipe_usart3; // message queues for incoming bytes, usart3 contains raw data
-extern ring_pipe pipe_wlan; // message queue for WLAN processed data
+extern ring_pipe pipe_wlan_data_input; // message queue for WLAN data Input, output is via WLAN_send_byte[s]()
 
-void init_wlan();
+void WLAN_init();
+osStatus_t __WLAN_get_response(char *resbuf, size_t bufsize, uint32_t timeout);
 /// cmd does not include end of command sequence
-void _WLAN_run(const char *cmd);
-void WLAN_connect(const char *rem_ip, uint16_t rem_port);
+void _WLAN_run_cmd(const char *cmd);
 void WLAN_send_byte(uint8_t byte);
 void WLAN_send_bytes(void *start, size_t len);
-
 
 #ifdef __cplusplus
 }

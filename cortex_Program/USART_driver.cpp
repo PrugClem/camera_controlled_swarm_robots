@@ -7,17 +7,16 @@
  *  The SvVis class is responsible for initialising the USART driver
  */
 
-#include "USART_driver.hpp"
 #include "SvVis_cortex.hpp" // for using the SvVis queues
 
 /**
  *  The usart queues are ALWAYS the raw data, whereas the WLAN queue is the queue for decoded received WLAN data
  */
 ring_pipe pipe_usart1, pipe_usart2, pipe_usart3;
-ring_pipe pipe_wlan;
 
 extern "C" void USART1_IRQHandler(void)
 {
+    USART_ClearITPendingBit(USART1, USART_IT_RXNE);
     char input;
     input = USART_ReceiveData(USART1);
     pipe_usart1.put(input, 0);
@@ -26,6 +25,7 @@ extern "C" void USART1_IRQHandler(void)
 
 extern "C" void USART2_IRQHandler(void)
 {
+    USART_ClearITPendingBit(USART2, USART_IT_RXNE);
     char input;
     input = USART_ReceiveData(USART2);
     pipe_usart2.put(input, 0);
@@ -34,6 +34,7 @@ extern "C" void USART2_IRQHandler(void)
 
 extern "C" void USART3_IRQHandler(void)
 {
+    USART_ClearITPendingBit(USART3, USART_IT_RXNE);
     char input;
     input = USART_ReceiveData(USART3);
     pipe_usart3.put(input, 0);

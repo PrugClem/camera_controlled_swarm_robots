@@ -3,13 +3,44 @@
  *  This file is also responsible for handling string/binary commands for the motor
  */
 
+/**
+ *  LEFT MOTOR PINS 
+ *      PB0         (PWM Signal)
+ *      PA6, PA7    (direction control Signals)
+ *      PC12, PC13  (Rotary Encoder Signals)
+ * 
+ *  RIGHT MOTOR PINS
+ *      PB1         (PWM Signal)
+ *      PA0, PA1    (direction control signals)
+ *      PB8, PB9    (Rotary Encoder Signals)
+ */
+
 #include "motor_driver.hpp"
 #include "extra.hpp"
 
-double speed_mult = 1.0;
-double base_speed_left = 0.1, base_speed_right = 0.1;
-uint16_t timer_period = 4096;
-osTimerId_t os_timer_stop;
+double _speed_mult = 1.0;
+double _base_speed_left = 0.1, _base_speed_right = 0.1;
+uint32_t _counter_right = 0, _counter_left = 0;
+const uint16_t _timer_period = 4096;
+osTimerId_t _os_timer_stop;
+
+extern "C" void EXTI9_5_IRQHandler(void)
+{
+    if(EXTI_GetITStatus(EXTI_Line8) != RESET) // MOTOR A
+    {
+        EXTI_ClearITPendingBit(EXTI_Line8);
+        _counter_right++;
+    }
+}
+
+extern "C" void EXTI15_10_IRQHandler(void)
+{
+    if(EXTI_GetITStatus(EXTI_Line12) != RESET) // MOTOR B
+    {
+        EXTI_ClearITPendingBit(EXTI_Line12);
+        _counter_left++;
+    }
+}
 
 void TIM3_IRQHandler(void)
 {
@@ -45,18 +76,18 @@ void timer_init(void)
     timer.TIM_CounterMode = TIM_CounterMode_Up; // count upwards
     timer.TIM_ClockDivision = TIM_CKD_DIV1; // no clock division
     timer.TIM_Prescaler = 256; // prescaler
-    timer.TIM_Period = timer_period; // autoreload
+    timer.TIM_Period = _timer_period; // autoreload
     TIM_TimeBaseInit(TIM3, &timer);
 
     memset(&outputcompare, 0, sizeof(outputcompare));
     outputcompare.TIM_OCMode = TIM_OCMode_PWM1;
     outputcompare.TIM_OutputState = TIM_OutputState_Enable;
-    outputcompare.TIM_Pulse = timer.TIM_Period * base_speed_left * speed_mult;
+    outputcompare.TIM_Pulse = timer.TIM_Period * _base_speed_left * _speed_mult;
     TIM_OC3Init(TIM3, &outputcompare);
     TIM_ITConfig(TIM3, TIM_IT_CC3, ENABLE);
 
-float speed_mult = 1.0;
-    outputcompare.TIM_Pulse = timer.TIM_Period * base_speed_right * speed_mult;
+float _speed_mult = 1.0;
+    outputcompare.TIM_Pulse = timer.TIM_Period * _base_speed_right * _speed_mult;
     TIM_OC4Init(TIM3, &outputcompare);
     TIM_ITConfig(TIM3, TIM_IT_CC4, ENABLE);
 
@@ -66,10 +97,11 @@ float speed_mult = 1.0;
 void motor_init(void)
 {
     GPIO_InitTypeDef gpio;
+    EXTI_InitTypeDef exti;
     gpio.GPIO_Mode = GPIO_Mode_Out_PP;
     gpio.GPIO_Speed = GPIO_Speed_50MHz;
     //enable GPIOA
-    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA | RCC_APB2Periph_GPIOB | RCC_APB2Periph_GPIOC | RCC_APB2Periph_AFIO, ENABLE);
 
     // set PA0,PA1, PA6,PA7 as output for motor control signals
     gpio.GPIO_Pin = GPIO_Pin_0;
@@ -82,13 +114,55 @@ void motor_init(void)
     GPIO_Init(GPIOA, &gpio);
 
     //set PA4 as input floating because high impedance because hardware
-    gpio.GPIO_Mode = GPIO_Mode_IN_FLOATING;
-    gpio.GPIO_Pin = GPIO_Pin_4;
-    GPIO_Init(GPIOA, &gpio);
+    //gpio.GPIO_Mode = GPIO_Mode_IN_FLOATING;
+    //gpio.GPIO_Pin = GPIO_Pin_4;
+    //GPIO_Init(GPIOA, &gpio);
+
+    // set B8, C12 as input for EXTI
+    gpio.GPIO_Mode = GPIO_Mode_IPU;
+    gpio.GPIO_Pin = GPIO_Pin_8;
+    GPIO_Init(GPIOB, &gpio);
+    gpio.GPIO_Pin = GPIO_Pin_12;
+    GPIO_Init(GPIOC, &gpio);
+
+    // init EXTI line 8
+    EXTI_DeInit();
+    exti.EXTI_Line = EXTI_Line8;
+    exti.EXTI_LineCmd = ENABLE;
+    exti.EXTI_Mode = EXTI_Mode_Interrupt;
+    exti.EXTI_Trigger = EXTI_Trigger_Rising;
+    EXTI_Init(&exti);
+    GPIO_EXTILineConfig(GPIO_PortSourceGPIOB, GPIO_PinSource8);
+    EXTI_ClearITPendingBit(EXTI_Line8);
+    // init EXTI line 12
+    exti.EXTI_Line = EXTI_Line12;
+    EXTI_Init(&exti);
+    GPIO_EXTILineConfig(GPIO_PortSourceGPIOC, GPIO_PinSource12);
+    EXTI_ClearITPendingBit(EXTI_Line12);
 
     timer_init();
 
-    os_timer_stop = osTimerNew(motor_stop, osTimerOnce, NULL, NULL);
+    _os_timer_stop = osTimerNew(motor_stop, osTimerOnce, NULL, NULL);
+}
+
+void motor_update_speed(void)
+{
+    TIM_OCInitTypeDef outputcompare;
+
+    memset(&outputcompare, 0, sizeof(outputcompare));
+    outputcompare.TIM_OCMode = TIM_OCMode_PWM1;
+    outputcompare.TIM_OutputState = TIM_OutputState_Enable;
+    outputcompare.TIM_Pulse = _timer_period * _base_speed_left * _speed_mult;
+    TIM_OC3Init(TIM3, &outputcompare); // PB0 PWM Signal
+
+    outputcompare.TIM_Pulse = _timer_period * _base_speed_right * _speed_mult;
+    TIM_OC4Init(TIM3, &outputcompare); // PB1 PWM Signal
+}
+
+void motor_set_speed(float new_speed)
+{
+    _speed_mult = new_speed;
+    motor_update_speed();
 }
 
 bool motor_cmd_str(const char* cmd, SvVis_t *src)
@@ -124,10 +198,10 @@ bool motor_cmd_str(const char* cmd, SvVis_t *src)
     {
         if(strlen(cmd) == 5)
         {
-            char msg[32];
-            //snprintf(msg, sizeof(msg), "current speed: %d", (int)(speed_mult * 128) );
+            char msg[SvVIS_DATA_MAX_LEN];
+            //snprintf(msg, sizeof(msg), "current speed: %d", (int)(_speed_mult * 128) );
             strcpy(msg, "current speed: ");
-            ul_to_string(msg+15, sizeof(msg)-15, speed_mult*128);
+            ul_to_string(msg+15, sizeof(msg)-15, _speed_mult*128);
             src->send_str(msg);
         }
         else
@@ -135,6 +209,16 @@ bool motor_cmd_str(const char* cmd, SvVis_t *src)
             time = strtoul(cmd+6, NULL, 0); // "speed %d"
             motor_set_speed(time / 128.0);
         }
+    }
+    else if( strncmp(cmd, "cntr", 4) == 0 )
+    {
+        char msg[SvVIS_DATA_MAX_LEN];
+        // "l: %12d r: %12d"
+        //           l: 0123456789 r: 0123456789
+        strcpy(msg, "l:            r:           \0");
+        ul_to_string(msg + 3, 10, _counter_left);
+        ul_to_string(msg + 17, 10, _counter_right);
+        src->send_str(msg);
     }
     else // unrecognized command, stopping
     {
@@ -174,26 +258,6 @@ bool motor_cmd_bin(motor_cmd_bin_t cmd, uint32_t time)
         motor_stop(NULL);
         return false; // return false if an unrecognized command was used
     }
-    osTimerStart(os_timer_stop, time);
+    osTimerStart(_os_timer_stop, time);
     return true; // return true if a valid command was used
-}
-
-void motor_update_speed(void)
-{
-    TIM_OCInitTypeDef outputcompare;
-
-    memset(&outputcompare, 0, sizeof(outputcompare));
-    outputcompare.TIM_OCMode = TIM_OCMode_PWM1;
-    outputcompare.TIM_OutputState = TIM_OutputState_Enable;
-    outputcompare.TIM_Pulse = timer_period * base_speed_left * speed_mult;
-    TIM_OC3Init(TIM3, &outputcompare);
-
-    outputcompare.TIM_Pulse = timer_period * base_speed_right * speed_mult;
-    TIM_OC4Init(TIM3, &outputcompare);
-}
-
-void motor_set_speed(float new_speed)
-{
-    speed_mult = new_speed;
-    motor_update_speed();
 }

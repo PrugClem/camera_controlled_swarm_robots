@@ -46,13 +46,15 @@ void main_thread_func(void *arg)
     SvVis_t *sender = nullptr; // pointer to send data back
 
     motor_init();   // initialise motor driver
+    WLAN_init(); // initialise WLAN driver
 
-    // triangle LED test, only enable one led for 500ms then all at once
-    LED_triangle_l(true, false, false);osDelay(500);
-    LED_triangle_l(false, true, false);osDelay(500);
-    LED_triangle_l(false, false, true);osDelay(500);
+    // triangle LED test, only enable one led for 100ms then all at once
+    LED_triangle_l(false, false, false);osDelay(100);
+    LED_triangle_l(true, false, false);osDelay(100);
+    LED_triangle_l(false, true, false);osDelay(100);
+    LED_triangle_l(false, false, true);osDelay(100);
     LED_triangle_l(true, true, true);
-#if 1
+
     for(;;)
     {
         // pointer sender point to an instance that has received a message
@@ -81,10 +83,10 @@ void main_thread_func(void *arg)
         }
         else
         {
-            // some interface has received data, due to the classes the retrieving is the same for all interfaces
+            // some interface has received data, due to the classes the retrieving code is the same for all interfaces
             sender->recv_msg(msg); // receive a message
 
-            // debug output
+            // debug output (removed)
             //sender->send_str("confirm message"); // confim the received message
             //sender->send_msg(msg);               // can be removed, this is mainly for testing puropses
 
@@ -115,30 +117,5 @@ void main_thread_func(void *arg)
             } // only process string messages
         } // some interface has receved data
     }
-#else
-    // old code which only uses one interface
-    for(;;)
-    {
-        tar->recv_msg(msg);
-        
-        // debug output
-        tar->send_str("confirm message");
-        tar->send_msg(msg);
-
-        if(strcmp(msg.data.raw, "help") == 0)
-        {
-            tar->send_str("Supported Commands:");
-            tar->send_str("stop Stop");
-            tar->send_str("fw   Move Forard");
-            tar->send_str("bw   Move Backwards");
-            tar->send_str("rr   Rotate Right");
-            tar->send_str("rl   Rotate Left");
-        }
-        else if(!motor_cmd_str(msg.data.raw))
-        {
-            tar->send_str("unknown command");
-        }
-    }
-#endif
 }
 

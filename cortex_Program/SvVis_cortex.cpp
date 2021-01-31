@@ -35,8 +35,7 @@ bool SvVis_t::init(USART_TypeDef *port, uint32_t baud)
         if(_usart3_handler != nullptr) return false;
         _usart3_handler = this;
         // pipe_usart3 contains the raw communication with the WLAN module (with overhead), a seperate pipe for processed data is used instead
-        this->pipe_data = &pipe_wlan;
-        init_wlan(); // initialise WLAN after initialising the message pipe
+        this->pipe_data = &pipe_wlan_data_input;
     }
     else
     {
