@@ -49,10 +49,10 @@ void main_thread_func(void *arg)
     WLAN_init(); // initialise WLAN driver
 
     // triangle LED test, only enable one led for 100ms then all at once
-    LED_triangle_l(false, false, false);osDelay(100);
-    LED_triangle_l(true, false, false);osDelay(100);
-    LED_triangle_l(false, true, false);osDelay(100);
-    LED_triangle_l(false, false, true);osDelay(100);
+    LED_triangle_l(false, false, false);osDelay(200);
+    LED_triangle_l(true, false, false);osDelay(200);
+    LED_triangle_l(false, true, false);osDelay(200);
+    LED_triangle_l(false, false, true);osDelay(200);
     LED_triangle_l(true, true, true);
 
     for(;;)

@@ -61,8 +61,9 @@ __NO_RETURN void send_thread(void *arg)
         osMessageQueueGet(tar->queue_send, &msgbuf, nullptr, osWaitForever);
         if(tar->port == USART3)
         {
-            WLAN_send_byte(msgbuf.channel);
-            WLAN_send_bytes(&msgbuf.data, msgbuf.len);
+            //WLAN_send_byte(msgbuf.channel);
+            //WLAN_send_bytes(&msgbuf.data, msgbuf.len);
+            WLAN_send_msg(msgbuf);
         }
         else
         {

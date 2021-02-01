@@ -8,6 +8,7 @@
 #include "cmsis_os2.h"
 
 #include "ring_pipe.hpp"
+#include "SvVis_cortex.hpp"
 
 #ifdef __cplusplus
 extern "C"
@@ -25,6 +26,7 @@ void WLAN_init();
 osStatus_t __WLAN_get_response(char *resbuf, size_t bufsize, uint32_t timeout);
 /// cmd does not include end of command sequence
 void _WLAN_run_cmd(const char *cmd);
+void WLAN_send_msg(struct SvVis_message_t &msg);
 void WLAN_send_byte(uint8_t byte);
 void WLAN_send_bytes(void *start, size_t len);
 

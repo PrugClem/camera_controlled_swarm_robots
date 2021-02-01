@@ -7,7 +7,7 @@
  *  The SvVis class is responsible for initialising the USART driver
  */
 
-#include "SvVis_cortex.hpp" // for using the SvVis queues
+#include "COMM_driver.hpp"
 
 /**
  *  The usart queues are ALWAYS the raw data, whereas the WLAN queue is the queue for decoded received WLAN data

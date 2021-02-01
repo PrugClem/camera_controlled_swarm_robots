@@ -5,8 +5,7 @@
  *  The SvVis class is responsible for initialising the USART driver AND WLAN driver
  */
 
-#include "SvVis_cortex.hpp"
-#include "LED_driver.h"
+#include "COMM_driver.hpp"
 #include "extra.hpp"
 
 #include <stdio.h>
@@ -168,23 +167,16 @@ void _WLAN_run_cmd(const char *cmd)
     USART_send_bytes(USART3, "\r\n", 2); // terminates the command sequence
 }
 
+void WLAN_send_msg(struct SvVis_message_t &msg)
+{
+    char sendbuf[sizeof(msg.channel)+sizeof(msg.data)];
+    memcpy(sendbuf, &msg.channel, sizeof(msg.channel));
+    memcpy(sendbuf+sizeof(msg.channel), &msg.data, msg.len);
+    WLAN_send_bytes(sendbuf, msg.len+sizeof(msg.channel) );
+}
 void WLAN_send_byte(uint8_t byte)
 {
-    char cmdbuf[128];
-    //uint8_t recvbuf;
-    osMutexAcquire(mutex_usart, osWaitForever);
-        strncpy(cmdbuf, "AT+CIPSENDBUF=", sizeof(cmdbuf) );
-        strncat(cmdbuf, "1", sizeof(cmdbuf)-1 - strlen(cmdbuf) );
-        _WLAN_run_cmd(cmdbuf);
-        __WLAN_get_response(nullptr, 0, osWaitForever); // 1,0
-        __WLAN_get_response(nullptr, 0, osWaitForever); // \r\n
-        __WLAN_get_response(nullptr, 0, osWaitForever); // OK
-        //pipe_usart3.pop(recvbuf, osWaitForever); // '>'
-        //pipe_usart3.pop(recvbuf, osWaitForever); // ' '
-        USART_send_byte(USART3, byte); // send data byte
-        __WLAN_get_response(nullptr, 0, osWaitForever); // Recv 1 bytes
-    osMutexRelease(mutex_usart);
-    return;
+    WLAN_send_bytes(&byte, sizeof(byte));
 }
 void WLAN_send_bytes(void *start, size_t len)
 {
@@ -201,7 +193,7 @@ void WLAN_send_bytes(void *start, size_t len)
         //pipe_usart3.pop(recvbuf, osWaitForever); // '>'
         //pipe_usart3.pop(recvbuf, osWaitForever); // ' '
         USART_send_bytes(USART3, start, len); // send data bytes
-        __WLAN_get_response(nullptr, 0, osWaitForever); // Recv x bytes
+        //__WLAN_get_response(nullptr, 0, osWaitForever); // Recv x bytes
     osMutexRelease(mutex_usart);
     return;
 }

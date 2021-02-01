@@ -213,11 +213,13 @@ bool motor_cmd_str(const char* cmd, SvVis_t *src)
     else if( strncmp(cmd, "cntr", 4) == 0 )
     {
         char msg[SvVIS_DATA_MAX_LEN];
-        // "l: %12d r: %12d"
-        //           l: 0123456789 r: 0123456789
-        strcpy(msg, "l:            r:           \0");
-        ul_to_string(msg + 3, 10, _counter_left);
-        ul_to_string(msg + 17, 10, _counter_right);
+        // "l: %12d"
+        // "r: %12d"
+        strncpy(msg, "l: ", 3);
+        ul_to_string(msg+3, sizeof(msg)-3, _counter_left);
+        src->send_str(msg);
+        strncpy(msg, "r: ", 3);
+        ul_to_string(msg+3, sizeof(msg)-3, _counter_right);
         src->send_str(msg);
     }
     else // unrecognized command, stopping
