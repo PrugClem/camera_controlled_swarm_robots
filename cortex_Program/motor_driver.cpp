@@ -20,9 +20,10 @@
 
 double _speed_mult = 1.0;
 double _base_speed_left = 0.1, _base_speed_right = 0.1;
-uint32_t _counter_right = 0, _counter_left = 0;
+volatile uint32_t _counter_right = 0, _counter_left = 0;
 const uint16_t _timer_period = 4096;
 osTimerId_t _os_timer_stop;
+osThreadId_t _os_thread_regulation;
 
 extern "C" void EXTI9_5_IRQHandler(void)
 {
@@ -40,11 +41,6 @@ extern "C" void EXTI15_10_IRQHandler(void)
         EXTI_ClearITPendingBit(EXTI_Line12);
         _counter_left++;
     }
-}
-
-void TIM3_IRQHandler(void)
-{
-    TIM_ClearITPendingBit(TIM3, TIM_IT_Update);
 }
 
 void motor_stop(void*arg)
@@ -86,7 +82,6 @@ void timer_init(void)
     TIM_OC3Init(TIM3, &outputcompare);
     TIM_ITConfig(TIM3, TIM_IT_CC3, ENABLE);
 
-float _speed_mult = 1.0;
     outputcompare.TIM_Pulse = timer.TIM_Period * _base_speed_right * _speed_mult;
     TIM_OC4Init(TIM3, &outputcompare);
     TIM_ITConfig(TIM3, TIM_IT_CC4, ENABLE);
@@ -94,13 +89,25 @@ float _speed_mult = 1.0;
     TIM_Cmd(TIM3, ENABLE);
 }
 
+__NO_RETURN void motor_feedback_handler(void *arg)
+{
+    for(;;)
+    {
+        _base_speed_left = 0.1;
+        _base_speed_right = (_base_speed_left * _counter_left) / _counter_right;
+        motor_update_speed();
+        osDelay(10);
+    }
+}
+
 void motor_init(void)
 {
     GPIO_InitTypeDef gpio;
     EXTI_InitTypeDef exti;
+    NVIC_InitTypeDef nvic;
     gpio.GPIO_Mode = GPIO_Mode_Out_PP;
     gpio.GPIO_Speed = GPIO_Speed_50MHz;
-    //enable GPIOA
+    //enable GPIOA, GPIOB, GPIOC and AFIO
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA | RCC_APB2Periph_GPIOB | RCC_APB2Periph_GPIOC | RCC_APB2Periph_AFIO, ENABLE);
 
     // set PA0,PA1, PA6,PA7 as output for motor control signals
@@ -113,20 +120,15 @@ void motor_init(void)
     gpio.GPIO_Pin = GPIO_Pin_7;
     GPIO_Init(GPIOA, &gpio);
 
-    //set PA4 as input floating because high impedance because hardware
-    //gpio.GPIO_Mode = GPIO_Mode_IN_FLOATING;
-    //gpio.GPIO_Pin = GPIO_Pin_4;
-    //GPIO_Init(GPIOA, &gpio);
-
     // set B8, C12 as input for EXTI
-    gpio.GPIO_Mode = GPIO_Mode_IPU;
+    gpio.GPIO_Mode = GPIO_Mode_IN_FLOATING;
+    gpio.GPIO_Speed = GPIO_Speed_50MHz;
     gpio.GPIO_Pin = GPIO_Pin_8;
     GPIO_Init(GPIOB, &gpio);
     gpio.GPIO_Pin = GPIO_Pin_12;
     GPIO_Init(GPIOC, &gpio);
 
     // init EXTI line 8
-    EXTI_DeInit();
     exti.EXTI_Line = EXTI_Line8;
     exti.EXTI_LineCmd = ENABLE;
     exti.EXTI_Mode = EXTI_Mode_Interrupt;
@@ -140,9 +142,20 @@ void motor_init(void)
     GPIO_EXTILineConfig(GPIO_PortSourceGPIOC, GPIO_PinSource12);
     EXTI_ClearITPendingBit(EXTI_Line12);
 
+    // init nvic
+    nvic.NVIC_IRQChannel = EXTI9_5_IRQn;
+    nvic.NVIC_IRQChannelCmd = ENABLE;
+    nvic.NVIC_IRQChannelPreemptionPriority = 0;
+    nvic.NVIC_IRQChannelSubPriority = 3;
+    NVIC_Init(&nvic);
+    nvic.NVIC_IRQChannel = EXTI15_10_IRQn;
+    NVIC_Init(&nvic);
+
+    // init PWM generators
     timer_init();
 
     _os_timer_stop = osTimerNew(motor_stop, osTimerOnce, NULL, NULL);
+    _os_thread_regulation = osThreadNew(motor_feedback_handler, nullptr, nullptr);
 }
 
 void motor_update_speed(void)
@@ -210,7 +223,7 @@ bool motor_cmd_str(const char* cmd, SvVis_t *src)
             motor_set_speed(time / 128.0);
         }
     }
-    else if( strncmp(cmd, "cntr", 4) == 0 )
+    /*else if( strncmp(cmd, "cntr", 4) == 0 )
     {
         char msg[SvVIS_DATA_MAX_LEN];
         // "l: %12d"
@@ -221,7 +234,13 @@ bool motor_cmd_str(const char* cmd, SvVis_t *src)
         strncpy(msg, "r: ", 3);
         ul_to_string(msg+3, sizeof(msg)-3, _counter_right);
         src->send_str(msg);
-    }
+        strncpy(msg, "s_l: ", 5);
+        ul_to_string(msg+5, sizeof(msg)-3, _base_speed_left*1000);
+        src->send_str(msg);
+        strncpy(msg, "s_r: ", 5);
+        ul_to_string(msg+5, sizeof(msg)-3, _base_speed_right*1000);
+        src->send_str(msg);
+    }*/
     else // unrecognized command, stopping
     {
         motor_cmd_bin(MOTOR_CMD_STOP, osWaitForever);
