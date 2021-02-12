@@ -96,13 +96,13 @@ void main_thread_func(void *arg)
                 {
                     // "short" help page
                     sender->send_str("Supported Commands:");
-                    sender->send_str("stop      Stop");
-                    sender->send_str("fw <t>    Move Forard");
-                    sender->send_str("bw <t>    Move Backwards");
-                    sender->send_str("rr <t>    Rotate Right");
-                    sender->send_str("rl <t>    Rotate Left");
-                    sender->send_str("speed <n> Set speed factor");
-                    sender->send_str("          default: 128");
+                    sender->send_str("stop       Stop");
+                    sender->send_str("fw <x cm>  Move Forard");
+                    sender->send_str("bw <x cm>  Move Backwards");
+                    sender->send_str("rr <p grd> Rotate Right");
+                    sender->send_str("rl <p grd> Rotate Left");
+                    sender->send_str("speed <n>  Set speed factor");
+                    sender->send_str("           default: 128");
                     sender->send_str(" ");
                     sender->send_str("<t> indicates that it is");
                     sender->send_str(" possible to run a command for");

@@ -21,8 +21,8 @@
 double _speed_mult = 1.0;
 double _base_speed_left = 0.1, _base_speed_right = 0.1;
 volatile uint32_t _counter_right = 0, _counter_left = 0;
+int64_t _counter_ttd = 0; // counter time to drive
 const uint16_t _timer_period = 4096;
-osTimerId_t _os_timer_stop;
 osThreadId_t _os_thread_regulation;
 
 extern "C" void EXTI9_5_IRQHandler(void)
@@ -43,9 +43,15 @@ extern "C" void EXTI15_10_IRQHandler(void)
     }
 }
 
-void motor_stop(void*arg)
+void motor_stop(void)
 {
+    _counter_ttd = 0;
+    _base_speed_left = _base_speed_right = 10.0;
     GPIO_ResetBits(GPIOA, GPIO_Pin_0 | GPIO_Pin_1 | GPIO_Pin_6 | GPIO_Pin_7);
+    motor_update_speed();
+    osDelay(2);
+    _base_speed_left = _base_speed_right = 0.1;
+    motor_update_speed();
 }
 
 void timer_init(void)
@@ -95,8 +101,14 @@ __NO_RETURN void motor_feedback_handler(void *arg)
     {
         _base_speed_left = 0.1;
         _base_speed_right = (_base_speed_left * _counter_left) / _counter_right;
+
+        _counter_ttd -= (_counter_left + _counter_right) / 2;
+        if(_counter_ttd <= 0) motor_stop();
+
+        _counter_left = 1;
+        _counter_right = 1;
         motor_update_speed();
-        osDelay(10);
+        osDelay(5);
     }
 }
 
@@ -154,7 +166,6 @@ void motor_init(void)
     // init PWM generators
     timer_init();
 
-    _os_timer_stop = osTimerNew(motor_stop, osTimerOnce, NULL, NULL);
     _os_thread_regulation = osThreadNew(motor_feedback_handler, nullptr, nullptr);
 }
 
@@ -255,30 +266,33 @@ bool motor_cmd_bin(motor_cmd_bin_t cmd, uint32_t time)
     {
     case MOTOR_CMD_STOP:
         //GPIO_ResetBits(GPIOA, GPIO_Pin_0 | GPIO_Pin_1 | GPIO_Pin_6 | GPIO_Pin_7);
-        motor_stop(NULL);
+        motor_stop();
         break;
     case MOTOR_CMD_FW:
+        _counter_ttd = time * 256;
         GPIO_SetBits(GPIOA, GPIO_Pin_0 | GPIO_Pin_6);
         GPIO_ResetBits(GPIOA, GPIO_Pin_1 | GPIO_Pin_7);
         break;
     case MOTOR_CMD_BW:
+        _counter_ttd = time * 256;
         GPIO_SetBits(GPIOA, GPIO_Pin_1 | GPIO_Pin_7);
         GPIO_ResetBits(GPIOA, GPIO_Pin_0 | GPIO_Pin_6);
         break;
     case MOTOR_CMD_RR:
+        _counter_ttd = time * 15;
         GPIO_SetBits(GPIOA, GPIO_Pin_1 | GPIO_Pin_6);
         GPIO_ResetBits(GPIOA, GPIO_Pin_0 | GPIO_Pin_7);
         break;
     case MOTOR_CMD_RL:
+        _counter_ttd = time * 15;
         GPIO_SetBits(GPIOA, GPIO_Pin_0 | GPIO_Pin_7);
         GPIO_ResetBits(GPIOA, GPIO_Pin_1 | GPIO_Pin_6);
         break;
 
     default: // unrecognized command, stopping
         //GPIO_ResetBits(GPIOA, GPIO_Pin_0 | GPIO_Pin_1 | GPIO_Pin_6 | GPIO_Pin_7);
-        motor_stop(NULL);
+        motor_stop();
         return false; // return false if an unrecognized command was used
     }
-    osTimerStart(_os_timer_stop, time);
     return true; // return true if a valid command was used
 }
