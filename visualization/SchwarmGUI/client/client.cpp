@@ -38,6 +38,7 @@ void Client::on_pathsimu_receive(cppsock::socket* socket, void** persistent, SH:
     */
     socket->recv(buff1, sizeof(buff1), channel | MSG_PEEK);
     const size_t* packet_size = Packet::size_ptr(buff1);    // Get size of the packet.
+
     uint8_t buff2[*packet_size];                            // Create a second buffer with the size of the packet.
     /*
     *   Receive the second time with the full size of the packet and without peeking so that the
@@ -45,8 +46,14 @@ void Client::on_pathsimu_receive(cppsock::socket* socket, void** persistent, SH:
     */
     socket->recv(buff2, sizeof(buff2), channel);
 
+    GoalPacket packet;
+    packet.allocate(*packet_size);
+    packet.set(buff2);
+    packet.decode();
+    std::cout << "X: " << packet.get_goal_x() << "  Y: " << packet.get_goal_y() << std::endl;
+
     // Process the packet...
-    process_packet(buff2, persistent);
+    //process_packet(buff2, persistent);
 }
 
 void Client::process_packet(uint8_t* buff, void** persistent)

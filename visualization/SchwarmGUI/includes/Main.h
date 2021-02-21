@@ -89,7 +89,7 @@ namespace Main
         float mouse_sensetivity     = 0.000f;
         float move_speed            = 0.0f;
 
-        float gamma_value           = 1.0f;
+        float gamma_value           = 2.2f;
         bool auto_gamma_value       = false;
 
         glm::vec3 worldlight_pos(0.0f);

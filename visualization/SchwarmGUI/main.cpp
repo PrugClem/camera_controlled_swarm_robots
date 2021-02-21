@@ -638,6 +638,12 @@ int main()  // its showtime
     const std::string imagefolder("E:/Privat/Programmieren/Diplomarbeit/SchwarmGUI/Images");
     Schwarm::Client::start_pathserver(&simu_running, &imagefolder);
     std::cout << get_msg("INFO / SERVER") << "Started simulation server." << std::endl;
+    sharedsimumem.start = false;
+    sharedsimumem.client->connect("10.212.134.6", 10005);
+    std::cout << get_msg("INFO / SERVER") << "Connected to simulation server (Address: " << Schwarm::SIMU_SERVER_ADDR << " Port: " << Schwarm::SIMU_SERVER_PORT << ")" << std::endl;
+
+    // for test send verification code
+    client.get_socket().send("Michi\0", 6, 0);
 
     /* -----------------------------------------------------------------------------
      * INIT OpenGL
@@ -800,7 +806,7 @@ int main()  // its showtime
 
     Schwarm::Vehicle vehicle1, vehicle2, vehicle3;  // initialize vehicles
     vehicle1.translate(0.25f, 0.015f, 0.0f);
-    vehicle1.set_speed(0.1f);
+    vehicle1.set_speed(0.2f);
     vehicle2.translate(-0.25f, 0.015f, 0.25f);
     vehicle2.set_speed(0.2f);
     vehicle3.translate(-0.25, 0.015f, -0.25);
@@ -818,8 +824,8 @@ int main()  // its showtime
     */
     Schwarm::VehicleBuffer vehicle_buffer(context, cmd_queue, vehicle, false, 3);
     vehicle_buffer.add_vehicle(&vehicle1);  // add vehicles to the buffer
-    vehicle_buffer.add_vehicle(&vehicle2);
-    vehicle_buffer.add_vehicle(&vehicle3);
+    //vehicle_buffer.add_vehicle(&vehicle2);
+    //vehicle_buffer.add_vehicle(&vehicle3);
     std::cout << get_msg("INFO / OpenGL") << "Vehicles loaded." << std::endl;
 
     // Start vehicle-processor.
