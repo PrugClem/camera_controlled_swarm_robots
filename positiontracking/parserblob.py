@@ -8,15 +8,7 @@ import struct
 import sys
 import bitstruct
 
-"""
 
-[[370.66077 299.6224 ]
- [372.7717  289.66666]
- [346.418   281.37036]
- [373.58087 274.61057]]
- 
-"""
-#640,480 Resolution
 def findcar(keypoints,width,height):
     x = 0
     y = 0

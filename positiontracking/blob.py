@@ -3,15 +3,24 @@ import numpy as np
 import parserblob as pb
 import importlib
 import socket
-import time
 """
-Socket establishment
+Disclaimer this code only works for one car on the screen.
+The position is calculated by taking in any and all points that are detected
+and getting the center of all of them
 """
 
 HOST = '10.212.134.6'
+"""
+IP Address still not static,
+might be a good idea to change that in the future
+"""
 PORT = 10005
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.connect((HOST, PORT))
+"""
+Authentification for the server's matching algorithm
+More security features would be a good idea in the near future
+"""
 s.sendall(b'Mario')
 data = s.recv(1024)
 print(data)
